@@ -1,4 +1,4 @@
-import 'package:driver_dashboard/ntcore/connection.dart';
+import 'package:driver_dashboard/ntcore/instance.dart';
 import 'package:flutter/material.dart';
 
 void main() {
