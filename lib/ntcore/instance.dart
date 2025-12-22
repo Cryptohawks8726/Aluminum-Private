@@ -8,11 +8,16 @@ import 'package:flutter/foundation.dart';
 /// See the WPILib C++ docs on ntcore's C api (ntcore_c.h) for
 /// more info.
 class NTInstance {
+  // Uses the right library name depending on platform and debug or release mode.
   final libntcore = switch (defaultTargetPlatform) {
     // only linux and windows are supported.
     // need to use a different path since the file names are different for each platform.
-    TargetPlatform.linux => DynamicLibrary.open("libntcored.so"),
-    TargetPlatform.windows => DynamicLibrary.open("ntcored.dll"),
+    TargetPlatform.linux => DynamicLibrary.open(
+      kDebugMode ? "libntcored.so" : "libntcore.so",
+    ),
+    TargetPlatform.windows => DynamicLibrary.open(
+      kDebugMode ? "ntcored.dll" : "ntcore.dll",
+    ),
 
     TargetPlatform.macOS => throw UnimplementedError(),
     TargetPlatform.android => throw UnimplementedError(),
@@ -29,6 +34,7 @@ class NTInstance {
         "NT_CreateInstance",
       );
   late final Pointer<Void> inst = ntCreateInstance();
+  late final Pointer<WPIString> connectionName;
 
   // C functions used by the class.
   // void NT_StartClient4(NT_Inst inst, const struct WPI_String *identity)
@@ -44,6 +50,15 @@ class NTInstance {
     int port = 5810,
     name = "8726DriverDashboard",
   }) {
-    ntStartClient4(inst, toWpiString(name));
+    connectionName = toWpiString(name);
+    ntStartClient4(inst, connectionName);
+  }
+
+  /// Frees resources in use by this instance. Failing to call this before
+  /// the object is destroyed will cause a slight memory leak.
+  void dispose() {
+    calloc.free(connectionName);
+    // doesn't seem to be a way to free instances so I'm guessing the library handles that internally
+    // or just only ever has one and doesn't free it or something.
   }
 }
