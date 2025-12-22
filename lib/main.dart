@@ -1,3 +1,4 @@
+import 'package:driver_dashboard/ntcore/connection.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -55,6 +56,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  final NTInstance inst = NTInstance();
 
   void _incrementCounter() {
     setState(() {
