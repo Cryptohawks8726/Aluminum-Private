@@ -1,4 +1,5 @@
 import 'package:driver_dashboard/ntcore/instance.dart';
+import 'package:driver_dashboard/ntcore/values.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -56,7 +57,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  final NTInstance inst = NTInstance();
+  final NTInstance inst = NTInstance()..updateServerNamePort("localhost", 5810);
+  late final NTValueNotifier gameTimeNotifier = NTValueNotifier.fromName(
+    valueName: "/SmartDashboard/gameTime",
+    inst: inst,
+  );
+  late final NTValueNotifier stateNotifier = NTValueNotifier.fromName(
+    valueName: "/SmartDashboard/currentState",
+    inst: inst,
+  );
 
   void _incrementCounter() {
     setState(() {
@@ -106,10 +115,31 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: .center,
           children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            const Text('Current value of gameTime:'),
+            ListenableBuilder(
+              listenable: gameTimeNotifier,
+              builder: (BuildContext context, Widget? child) {
+                if (gameTimeNotifier.currentValue is NTDoubleValue) {
+                  NTDoubleValue val =
+                      gameTimeNotifier.currentValue as NTDoubleValue;
+                  return Text('${val.value}');
+                } else {
+                  return const Text('Unknown value');
+                }
+              },
+            ),
+            const Text('Current value of currentState:'),
+            ListenableBuilder(
+              listenable: stateNotifier,
+              builder: (BuildContext context, Widget? child) {
+                if (stateNotifier.currentValue is NTStringValue) {
+                  NTStringValue val =
+                      stateNotifier.currentValue as NTStringValue;
+                  return Text(val.value);
+                } else {
+                  return const Text('Unknown value');
+                }
+              },
             ),
           ],
         ),
