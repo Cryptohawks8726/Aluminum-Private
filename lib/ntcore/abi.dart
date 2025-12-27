@@ -10,7 +10,7 @@ typedef NTListenerCallback = Void Function(Pointer<Void>, Pointer<NTEvent>);
 final class NTCoreABI {
   // Uses the right library name depending on platform and debug or release mode.
   static final _libntcore = switch (defaultTargetPlatform) {
-    // only linux and windows are supported.
+    // only linux, windows, and macos are supported.
     // need to use a different path since the file names are different for each platform.
     TargetPlatform.linux => DynamicLibrary.open(
       kDebugMode ? "libntcored.so" : "libntcore.so",
@@ -18,8 +18,8 @@ final class NTCoreABI {
     TargetPlatform.windows => DynamicLibrary.open(
       kDebugMode ? "ntcored.dll" : "ntcore.dll",
     ),
+    TargetPlatform.macOS => DynamicLibrary.open("libntcoreffi.dylib"),
 
-    TargetPlatform.macOS => throw UnimplementedError(),
     TargetPlatform.android => throw UnimplementedError(),
     TargetPlatform.fuchsia => throw UnimplementedError(),
     TargetPlatform.iOS => throw UnimplementedError(),
