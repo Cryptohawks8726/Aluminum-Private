@@ -24,8 +24,7 @@ containing the executable and all project assets/libraries.
 This builds the ntcore library from source along with the flutter project, so it make take a
 minute the first time you run it.
 
-On macos you must first download the ntcoreffi binary from [wpilib's maven releases](https://frcmaven.wpi.edu/ui/native/release/)
-and place them in the build bundle - unless someone wants to fiddle with xcode to get it to build from source correctly
-(should be doable).
+On macos, the compiled ntcore binaries from [wpilib's maven releases](https://frcmaven.wpi.edu/ui/native/release/) have been added and configured to build in the xcode runner project. `flutter run` will run the project in debug mode as usual. Running `flutter build macos` will create a bundle in build/macos/Build/Products/Release.
 
-Other than that this is a normal flutter project and can run/hot reload/add packages as usual.
+
+Other than that this is a normal flutter project and can run/hot reload/add packages as usual. Note that the dashboard will most likely be ran on windows; the linux and macos versions are mainly for development purposes.
