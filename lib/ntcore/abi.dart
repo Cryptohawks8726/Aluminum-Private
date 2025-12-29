@@ -6,24 +6,40 @@ import 'package:flutter/foundation.dart';
 
 typedef NTListenerCallback = Void Function(Pointer<Void>, Pointer<NTEvent>);
 
+String _formatLibName(String name) {
+  switch (defaultTargetPlatform) {
+    case TargetPlatform.android:
+      // TODO: Handle this case.
+      throw UnimplementedError();
+    case TargetPlatform.fuchsia:
+      // TODO: Handle this case.
+      throw UnimplementedError();
+    case TargetPlatform.iOS:
+      // TODO: Handle this case.
+      throw UnimplementedError();
+    case TargetPlatform.linux:
+      return 'lib$name.so';
+    case TargetPlatform.macOS:
+      return 'lib$name.dylib';
+    case TargetPlatform.windows:
+      return '$name.dll';
+  }
+}
+
+DynamicLibrary _findNTCoreLib() {
+  try {
+    return DynamicLibrary.open(
+      kDebugMode ? _formatLibName("ntcored") : _formatLibName("ntcore"),
+    );
+  } catch (_) {
+    return DynamicLibrary.open(_formatLibName('ntcoreffi'));
+  }
+}
+
 /// Class containing ffi bindings to all C functions used by the dashboard.
 final class NTCoreABI {
   // Uses the right library name depending on platform and debug or release mode.
-  static final _libntcore = switch (defaultTargetPlatform) {
-    // only linux, windows, and macos are supported.
-    // need to use a different path since the file names are different for each platform.
-    TargetPlatform.linux => DynamicLibrary.open(
-      kDebugMode ? "libntcored.so" : "libntcore.so",
-    ),
-    TargetPlatform.windows => DynamicLibrary.open(
-      kDebugMode ? "ntcored.dll" : "ntcore.dll",
-    ),
-    TargetPlatform.macOS => DynamicLibrary.open("libntcoreffi.dylib"),
-
-    TargetPlatform.android => throw UnimplementedError(),
-    TargetPlatform.fuchsia => throw UnimplementedError(),
-    TargetPlatform.iOS => throw UnimplementedError(),
-  };
+  static final _libntcore = _findNTCoreLib();
 
   // Creates an instance when the class is instantiated.
   static final ntCreateInstance = _libntcore

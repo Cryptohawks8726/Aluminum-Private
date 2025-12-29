@@ -11,20 +11,22 @@ This is used to build ntcore from source, the WPILib library which can run a Net
 The FFI bindings used can be found in lib/ntcore and you can find the C api's documentation
 [here](https://github.wpilib.org/allwpilib/docs/release/cpp/ntcore__c_8h.html).
 
-## Getting Started
-
-TODO
-
 ## Building and Running
 
-On windows and linux, `flutter run` will run the project in debug mode and `flutter build`
+You can either compile the ntcore library from source using the submodule checkout in this repository
+or use precompiled ntcoreffi binaries which can be found in [wpilib's maven releases](https://frcmaven.wpi.edu/ui/native/release/).
+If using those binaries, place them in the repository's root. Setting the environment variable COMPILE_NTCORE will cause
+the library to be build from source. You need the protobuf C++ library installed somewhere cmake will be able to find it
+as a dependency.
+
+Building from source is currently not supported on macos.
+
+`flutter run` will run the project in debug mode and `flutter build {platform}`
 will build and places a bundle in build/{platform}/{architecture}/{debug or release}/bundle
 containing the executable and all project assets/libraries.
 
-This builds the ntcore library from source along with the flutter project, so it make take a
-minute the first time you run it.
-
-On macos, the compiled ntcore binaries from [wpilib's maven releases](https://frcmaven.wpi.edu/ui/native/release/) have been added and configured to build in the xcode runner project. `flutter run` will run the project in debug mode as usual. Running `flutter build macos` will create a bundle in build/macos/Build/Products/Release.
-
-
 Other than that this is a normal flutter project and can run/hot reload/add packages as usual. Note that the dashboard will most likely be ran on windows; the linux and macos versions are mainly for development purposes.
+
+## Getting Started
+
+TODO
