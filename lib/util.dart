@@ -1,8 +1,22 @@
 import 'package:flutter/material.dart';
 
+// GENERAL //
+const List<String?> llCamUrls = [null, null];
+
 String formatTime({required int timeInSeconds}) {
   return "${(timeInSeconds / 60).round()}:${timeInSeconds % 60}";
 }
+
+// LAYOUT WIDGETS //
+
+// widget to be displayed when camera can't connect
+Widget Function(BuildContext)? cameraErrorWidget = (context) => Container(
+  color: Colors.black,
+  width: 480,
+  height: 360,
+  padding: const EdgeInsets.all(10),
+  child: const Text("No Connection!", style: TextStyle(color: Colors.white, fontSize: 20)),
+);
 
 class LabelContainer extends StatelessWidget {
   final String label;

@@ -1,7 +1,9 @@
 import 'package:driver_dashboard/ntcore/values.dart';
 import 'package:driver_dashboard/ntreferences.dart';
+import 'package:mjpeg_view/mjpeg_view.dart';
 import 'package:driver_dashboard/util.dart';
 import 'package:flutter/material.dart';
+
 
 class Default2CamDashboard extends StatefulWidget {
   const Default2CamDashboard({super.key});
@@ -11,42 +13,35 @@ class Default2CamDashboard extends StatefulWidget {
 }
 
 class _Default2CamDashboardState extends State<Default2CamDashboard> {
+
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: .center,
+      mainAxisAlignment: .start,
       crossAxisAlignment: .center,
       children: [
         Column(
           spacing: 30,
           mainAxisAlignment: .center,
           children: [
-            // these black containers are temporary
-            // they will be replaced by mjpeg streams
-            Container(
-              color: Colors.black,
+            // limelight cameras are 4:3 aspect ratio
+            MjpegView(
+                width: 480,
+                height: 360,
+                errorWidget: cameraErrorWidget,
+                uri: llCamUrls[0] ?? 'http://webcam01.ecn.purdue.edu/mjpg/video.mjpg',
+              ),
+
+            MjpegView(
               width: 480,
               height: 360,
-              padding: EdgeInsets.all(10),
-              child: Text(
-                "Cam 1",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-            ),
-            Container(
-              color: Colors.black,
-              width: 480,
-              height: 360,
-              padding: EdgeInsets.all(10),
-              child: Text(
-                "Cam 2",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
+              errorWidget: cameraErrorWidget,
+              uri: llCamUrls[1] ?? 'http://webcam01.ecn.purdue.edu/mjpg/video.mjpg',
             ),
           ],
         ),
 
-        SizedBox(width: 200),
+        SizedBox(width: 50),
 
         Column(
           mainAxisAlignment: .center,
@@ -62,6 +57,8 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                 color: Colors.green,
                 borderRadius: BorderRadius.all(Radius.circular(40)),
               ),
+              
+              // timer text
               child: ListenableBuilder(
                 listenable: gameTimeNotifier,
                 builder: (BuildContext context, Widget? child) {
@@ -81,6 +78,7 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                   );
                 },
               ),
+
             ),
 
             // labels
