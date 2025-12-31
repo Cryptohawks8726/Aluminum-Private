@@ -1,3 +1,5 @@
+import 'package:driver_dashboard/ntcore/values.dart';
+import 'package:driver_dashboard/ntreferences.dart';
 import 'package:driver_dashboard/util.dart';
 import 'package:flutter/material.dart';
 
@@ -9,8 +11,6 @@ class Default2CamDashboard extends StatefulWidget {
 }
 
 class _Default2CamDashboardState extends State<Default2CamDashboard> {
-  final int gameTime = 135;
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -62,13 +62,24 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                 color: Colors.green,
                 borderRadius: BorderRadius.all(Radius.circular(40)),
               ),
-              child: Text(
-                formatTime(timeInSeconds: gameTime),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 80,
-                  fontWeight: .bold,
-                ),
+              child: ListenableBuilder(
+                listenable: gameTimeNotifier,
+                builder: (BuildContext context, Widget? child) {
+                  var s = switch (gameTimeNotifier.currentValue) {
+                    NTDoubleValue(:final value) => formatTime(
+                      timeInSeconds: value.toInt(),
+                    ),
+                    _ => '-:--',
+                  };
+                  return Text(
+                    s,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 80,
+                      fontWeight: .bold,
+                    ),
+                  );
+                },
               ),
             ),
 
