@@ -50,6 +50,16 @@ class _DriverDashboardState extends State<DriverDashboard> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          // TODO: get correct team color and make a scheme out of it
+          // seedColor: Color.fromARGB(0, 0, 0, 0),
+          seedColor: Colors.indigo,
+          brightness: .dark,
+        ),
+
+        textTheme: TextTheme(),
+      ),
       debugShowCheckedModeBanner: false, // removes red debug banner
       home: Scaffold(
         key: scaffoldKey,
@@ -61,17 +71,44 @@ class _DriverDashboardState extends State<DriverDashboard> {
           child: pageList[selectedIndex].page,
         ),
 
-        // drawer button
-        floatingActionButton: FloatingActionButton.small(
-          onPressed: () {
-            scaffoldKey.currentState?.openEndDrawer();
-          },
-          child: Icon(Icons.settings),
-        ),
+        // drawer button (has since been moved to dashbaord)
 
         // drawer
         endDrawer: NavigationDrawer(
           selectedIndex: selectedIndex,
+          footer: Padding(
+            padding: EdgeInsetsGeometry.symmetric(
+              horizontal: 12.0,
+              vertical: 12.0,
+            ),
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                Text('Selected Auto:'),
+                // TODO: Swap for proper auto chooser widget
+                DropdownButton(
+                  onChanged: (val) {},
+                  items: [
+                    DropdownMenuItem(
+                      value: 'SomeReallyLongAutoName',
+                      child: Text('SomeReallyLongAutoName'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'OtherReallyLongAutoName',
+                      child: Text('OtherReallyLongAutoName'),
+                    ),
+                  ],
+                  value: 'SomeReallyLongAutoName',
+                ),
+              ],
+            ),
+          ),
+
+          onDestinationSelected: (int idx) {
+            setState(() {
+              selectedIndex = idx;
+            });
+          },
           children: pageList
               .map<Widget>((var page) {
                 return NavigationDrawerDestination(
@@ -80,12 +117,6 @@ class _DriverDashboardState extends State<DriverDashboard> {
                 );
               })
               .toList(growable: false),
-
-          onDestinationSelected: (int idx) {
-            setState(() {
-              selectedIndex = idx;
-            });
-          },
         ),
       ),
     );
