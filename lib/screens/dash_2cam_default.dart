@@ -15,12 +15,14 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
     var theme = Theme.of(context);
     return DefaultTextStyle.merge(
       style: TextStyle(fontSize: 18.0),
+      // 2-column layout row
       child: Row(
         mainAxisAlignment: .start,
         crossAxisAlignment: .center,
         children: [
           Expanded(
             flex: 2,
+            // Container with both camera views
             child: Container(
               padding: EdgeInsets.fromLTRB(15.0, 10.0, 45.0, 10.0),
               decoration: BoxDecoration(
@@ -67,6 +69,7 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
             ),
           ),
 
+          // Right side column with rest of dashboard
           Expanded(
             flex: 3,
             child: Container(
@@ -76,6 +79,7 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                 crossAxisAlignment: .center,
                 spacing: 10,
                 children: [
+                  // Top status bar (match #, time, alliance)
                   Stack(
                     children: [
                       Align(
@@ -109,6 +113,7 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                     child: Image(image: AssetImage('images/2025-field.png')),
                   ),
 
+                  // Lower section under field
                   Expanded(
                     flex: 1,
                     child: Row(
@@ -117,6 +122,7 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                       spacing: 5.0,
                       children: [
                         // TODO: Break this out into its own widget and make it easy to provide a map of names to bindings/info
+                        // State info and bindings
                         Expanded(
                           flex: 1,
                           child: Column(
@@ -141,6 +147,7 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                                 ],
                               ),
                               Divider(),
+                              // List of bindings
                               Table(
                                 columnWidths: <int, TableColumnWidth>{
                                   0: FlexColumnWidth(),
@@ -203,6 +210,9 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                         VerticalDivider(),
 
                         // TODO: Break out into separate widget
+                        // List of custom displayed values
+                        // (structured right now as 3 rows, should change to wrap later when we have a good solution to space things right)
+                        // Currently populated with sample random nonsense
                         Expanded(
                           flex: 1,
                           child: Align(
@@ -215,6 +225,7 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                                   child: Row(
                                     spacing: 10.0,
                                     children: [
+                                      // placeholder lunite counter example
                                       Container(
                                         padding: EdgeInsets.all(5.0),
                                         decoration: BoxDecoration(
@@ -241,6 +252,7 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                                           ],
                                         ),
                                       ),
+                                      // true/false value example
                                       Container(
                                         padding: EdgeInsets.all(5.0),
                                         decoration: BoxDecoration(
@@ -257,6 +269,7 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                                           ],
                                         ),
                                       ),
+                                      // number example
                                       Container(
                                         padding: EdgeInsets.all(5.0),
                                         decoration: BoxDecoration(
@@ -277,11 +290,13 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                                     ],
                                   ),
                                 ),
+
                                 Expanded(
                                   flex: 1,
                                   child: Row(
                                     spacing: 10.0,
                                     children: [
+                                      // long widget example
                                       Container(
                                         padding: EdgeInsets.all(5.0),
                                         decoration: BoxDecoration(
@@ -305,6 +320,7 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                                     ],
                                   ),
                                 ),
+                                // last row is currently empty
                                 Expanded(flex: 1, child: Row()),
                               ],
                             ),
@@ -314,6 +330,7 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                         VerticalDivider(),
 
                         // Maybe also break this out into another widget?
+                        // Status icons
                         Stack(
                           children: [
                             Column(
@@ -322,11 +339,13 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                               spacing: 10.0,
                               crossAxisAlignment: .center,
                               children: [
+                                // these are all meaningless placeholders
                                 Icon(Icons.control_camera, color: Colors.green),
                                 Icon(Icons.two_wheeler, color: Colors.green),
                                 Icon(Icons.battery_0_bar, color: Colors.red),
                               ],
                             ),
+                            // scaffold drawer button
                             Align(
                               alignment: .bottomCenter,
                               child: FloatingActionButton.small(
