@@ -19,50 +19,56 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
         mainAxisAlignment: .start,
         crossAxisAlignment: .center,
         children: [
-          Container(
-            width: 640,
-            padding: EdgeInsets.fromLTRB(15.0, 0.0, 45.0, 0.0),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: <Color>[
-                  theme.colorScheme.primaryContainer,
-                  theme.scaffoldBackgroundColor,
-                ],
-                stops: [0.8, 1.0],
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.fromLTRB(15.0, 10.0, 45.0, 10.0),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: <Color>[
+                    theme.colorScheme.primaryContainer,
+                    theme.scaffoldBackgroundColor,
+                  ],
+                  stops: [0.8, 1.0],
+                ),
               ),
-            ),
-            child: Column(
-              spacing: 30,
-              mainAxisAlignment: .center,
-              children: [
-                // limelight cameras are 4:3 aspect ratio
-                SizedBox(
-                  width: 640,
-                  height: 480,
-                  child: MjpegView(
-                    errorWidget: cameraErrorWidget,
-                    uri:
-                        'http://61.211.241.239/nphMotionJpeg?Resolution=320x240&Quality=Standard',
+              child: Column(
+                spacing: 30,
+                mainAxisAlignment: .center,
+                mainAxisSize: .max,
+                children: [
+                  // limelight cameras are 4:3 aspect ratio
+                  Expanded(
+                    child: SizedBox(
+                      child: MjpegView(
+                        fit: BoxFit.contain,
+                        errorWidget: cameraErrorWidget,
+                        uri:
+                            'http://61.211.241.239/nphMotionJpeg?Resolution=320x240&Quality=Standard',
+                      ),
+                    ),
                   ),
-                ),
 
-                SizedBox(
-                  width: 640,
-                  height: 480,
-                  child: MjpegView(
-                    errorWidget: cameraErrorWidget,
-                    uri:
-                        llCamUrls[1] ??
-                        'http://webcam01.ecn.purdue.edu/mjpg/video.mjpg',
+                  Expanded(
+                    child: SizedBox(
+                      child: MjpegView(
+                        fit: BoxFit.contain,
+                        errorWidget: cameraErrorWidget,
+                        uri:
+                            llCamUrls[1] ??
+                            'http://webcam01.ecn.purdue.edu/mjpg/video.mjpg',
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
 
           Expanded(
+            flex: 3,
             child: Container(
               padding: EdgeInsets.fromLTRB(45.0, 10.0, 15.0, 10.0),
               child: Column(
@@ -251,6 +257,23 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                                           ],
                                         ),
                                       ),
+                                      Container(
+                                        padding: EdgeInsets.all(5.0),
+                                        decoration: BoxDecoration(
+                                          color:
+                                              theme.colorScheme.inversePrimary,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15.0),
+                                          ),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment: .center,
+                                          children: [
+                                            Text('Some Number:'),
+                                            Text('129.56'),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -276,23 +299,6 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                                             Text(
                                               'Woah This is A Really Long String from the Robot',
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        decoration: BoxDecoration(
-                                          color:
-                                              theme.colorScheme.inversePrimary,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15.0),
-                                          ),
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment: .center,
-                                          children: [
-                                            Text('Some Number:'),
-                                            Text('129.56'),
                                           ],
                                         ),
                                       ),
