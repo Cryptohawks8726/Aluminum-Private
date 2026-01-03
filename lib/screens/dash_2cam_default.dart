@@ -1,3 +1,4 @@
+import 'package:driver_dashboard/settings.dart';
 import 'package:driver_dashboard/widgets/field_view.dart';
 import 'package:driver_dashboard/widgets/nt_values_display.dart';
 import 'package:driver_dashboard/widgets/state_bindings.dart';
@@ -51,8 +52,7 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                       child: MjpegView(
                         fit: BoxFit.contain,
                         errorWidget: cameraErrorWidget,
-                        uri:
-                            'http://61.211.241.239/nphMotionJpeg?Resolution=320x240&Quality=Standard',
+                        uri: Settings.getCameraURLs[0],
                       ),
                     ),
                   ),
@@ -62,9 +62,7 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                       child: MjpegView(
                         fit: BoxFit.contain,
                         errorWidget: cameraErrorWidget,
-                        uri:
-                            llCamUrls[1] ??
-                            'http://webcam01.ecn.purdue.edu/mjpg/video.mjpg',
+                        uri: Settings.getCameraURLs[1],
                       ),
                     ),
                   ),

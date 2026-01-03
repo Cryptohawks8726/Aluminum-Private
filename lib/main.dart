@@ -1,5 +1,6 @@
 import 'package:driver_dashboard/screens/dash_2cam_default.dart';
 import 'package:driver_dashboard/screens/debug_screen.dart';
+import 'package:driver_dashboard/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -33,7 +34,7 @@ const pageList = <PageDestination>[
   PageDestination(
     name: 'Settings',
     icon: Icon(Icons.settings),
-    page: Text('TODO'),
+    page: SettingsScreen(),
   ),
 ];
 

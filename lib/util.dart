@@ -13,7 +13,9 @@ class PID {
 
   //PID({required this.pval, required this.ival, required this.dval});
 
-  double get p => pval; double get i => ival; double get d => dval;
+  double get p => pval;
+  double get i => ival;
+  double get d => dval;
   set p(double p) => pval = p;
   set i(double i) => ival = i;
   set d(double d) => dval = d;
