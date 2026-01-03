@@ -7,6 +7,18 @@ String formatTime({required int timeInSeconds}) {
   return "${(timeInSeconds / 60).round()}:${timeInSeconds % 60}";
 }
 
+// may or may not be used idk yet - ismail
+class PID {
+  double pval, ival, dval;
+
+  PID({required this.pval, required this.ival, required this.dval});
+
+  double get p => pval; double get i => ival; double get d => dval;
+  set p(double p) => pval = p;
+  set i(double i) => ival = i;
+  set d(double d) => dval = d;
+}
+
 // LAYOUT WIDGETS //
 
 // widget to be displayed when camera can't connect
