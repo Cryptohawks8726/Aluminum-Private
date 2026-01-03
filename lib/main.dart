@@ -1,6 +1,7 @@
 import 'package:driver_dashboard/screens/dash_2cam_default.dart';
 import 'package:driver_dashboard/screens/debug_screen.dart';
 import 'package:driver_dashboard/screens/settings_screen.dart';
+import 'package:driver_dashboard/util.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -52,16 +53,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          // TODO: get correct team color and make a scheme out of it
-          // seedColor: Color.fromARGB(0, 0, 0, 0),
-          seedColor: Colors.indigo,
-          brightness: .dark,
-        ),
-
-        textTheme: TextTheme(),
-      ),
+      theme: appTheme,
       debugShowCheckedModeBanner: false, // removes red debug banner
       home: Scaffold(
         key: scaffoldKey,

@@ -21,6 +21,20 @@ class PID {
   set d(double d) => dval = d;
 }
 
+final ThemeData appTheme = ThemeData(
+  colorScheme: ColorScheme.fromSeed(
+    // TODO: get correct team color and make a scheme out of it
+
+    // seedColor: Color.fromARGB(0, 0, 0, 0),
+    seedColor: Colors.indigo,
+
+    brightness: .dark,
+  ),
+
+  textTheme: TextTheme(),
+);
+
+
 // LAYOUT WIDGETS //
 
 // widget to be displayed when camera can't connect
@@ -70,6 +84,35 @@ class LabelContainer extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class PIDTextField extends StatelessWidget {
+  final String label;
+
+  final TextEditingController controller;
+
+  const PIDTextField({
+    required this.label,
+
+    required this.controller,
+
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: .center,
+
+      children: [
+        Text(label, style: TextStyle(fontSize: 20, fontWeight: .bold)),
+
+        SizedBox(width: 20),
+
+        Expanded(flex: 1, child: TextField(controller: controller)),
+      ],
     );
   }
 }
