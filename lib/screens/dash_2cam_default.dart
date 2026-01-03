@@ -134,31 +134,22 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
 
                         // Maybe also break this out into another widget later?
                         // Status icons
-                        Stack(
-                          children: [
-                            Column(
-                              mainAxisAlignment: .start,
-                              mainAxisSize: .max,
-                              spacing: 10.0,
-                              crossAxisAlignment: .center,
-                              children: [
-                                // these are all meaningless placeholders
-                                Icon(Icons.control_camera, color: Colors.green),
-                                Icon(Icons.two_wheeler, color: Colors.green),
-                                Icon(Icons.battery_0_bar, color: Colors.red),
-                              ],
-                            ),
-                            // scaffold drawer button
-                            Align(
-                              alignment: .bottomCenter,
-                              child: FloatingActionButton.small(
-                                onPressed: () {
-                                  Scaffold.of(context).openEndDrawer();
-                                },
-                                child: Icon(Icons.menu),
-                              ),
-                            ),
-                          ],
+                        // The SizedOverflowBox is to leave room for the FloatingActionButton
+                        // otherwise it falls on top of the divider and looks weird.
+                        SizedOverflowBox(
+                          size: Size(48.0, 0.0),
+                          child: Column(
+                            mainAxisAlignment: .start,
+                            mainAxisSize: .max,
+                            spacing: 10.0,
+                            crossAxisAlignment: .center,
+                            children: [
+                              // these are all meaningless placeholders
+                              Icon(Icons.control_camera, color: Colors.green),
+                              Icon(Icons.two_wheeler, color: Colors.green),
+                              Icon(Icons.battery_0_bar, color: Colors.red),
+                            ],
+                          ),
                         ),
                       ],
                     ),

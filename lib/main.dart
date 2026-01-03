@@ -45,6 +45,7 @@ class DriverDashboard extends StatefulWidget {
 }
 
 class _DriverDashboardState extends State<DriverDashboard> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   int selectedIndex = 0;
 
   @override
@@ -62,6 +63,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
       ),
       debugShowCheckedModeBanner: false, // removes red debug banner
       home: Scaffold(
+        key: scaffoldKey,
         // TODO: add navigation buttons and stuff surrounding the main dashboard widget
         body: Container(
           // container for screens
@@ -70,6 +72,12 @@ class _DriverDashboardState extends State<DriverDashboard> {
         ),
 
         // drawer button (has since been moved to dashbaord)
+        floatingActionButton: FloatingActionButton.small(
+          onPressed: () {
+            scaffoldKey.currentState?.openEndDrawer();
+          },
+          child: const Icon(Icons.menu),
+        ),
 
         // drawer
         endDrawer: NavigationDrawer(
