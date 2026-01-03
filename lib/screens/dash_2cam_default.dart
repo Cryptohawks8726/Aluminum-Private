@@ -1,4 +1,6 @@
-import 'package:driver_dashboard/field_view.dart';
+import 'package:driver_dashboard/widgets/field_view.dart';
+import 'package:driver_dashboard/widgets/nt_values_display.dart';
+import 'package:driver_dashboard/widgets/state_bindings.dart';
 import 'package:mjpeg_view/mjpeg_view.dart';
 import 'package:driver_dashboard/util.dart';
 import 'package:flutter/material.dart';
@@ -120,215 +122,17 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                       crossAxisAlignment: .center,
                       spacing: 5.0,
                       children: [
-                        // TODO: Break this out into its own widget and make it easy to provide a map of names to bindings/info
                         // State info and bindings
-                        Expanded(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: .start,
-                            children: [
-                              Stack(
-                                children: [
-                                  Align(
-                                    alignment: .centerLeft,
-                                    child: Text(
-                                      'Robot is currently in: ',
-                                      style: theme.textTheme.headlineMedium,
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: .centerRight,
-                                    child: Text(
-                                      'IdleToIntake',
-                                      style: theme.textTheme.headlineMedium,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Divider(),
-                              // List of bindings
-                              Table(
-                                columnWidths: <int, TableColumnWidth>{
-                                  0: FlexColumnWidth(),
-                                  1: FlexColumnWidth(),
-                                },
-                                children: [
-                                  TableRow(
-                                    children: [
-                                      Text('A: Do X'),
-                                      Text('B: Do X'),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      Text('X: Do X'),
-                                      Text('Y: Do X'),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      Text('LB: Do X'),
-                                      Text('RB: Do X'),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      Text('LT: Do X'),
-                                      Text('RT: Do X'),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      Text('Start: Do X'),
-                                      Text('Select: Do X'),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      Text('D-Up: Do X'),
-                                      Text('D-Down: Do X'),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      Text('D-Left: Do X'),
-                                      Text('D-Right: Do X'),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Divider(),
-                              Text('Swerve Enabled'),
-                              Text(
-                                'Free control over the robot while driving towards intaking pieces.',
-                              ),
-                            ],
-                          ),
-                        ),
+                        Expanded(flex: 1, child: StateBindingsDisplay()),
 
                         VerticalDivider(),
 
-                        // TODO: Break out into separate widget
                         // List of custom displayed values
-                        // (structured right now as 3 rows, should change to wrap later when we have a good solution to space things right)
-                        // Currently populated with sample random nonsense
-                        Expanded(
-                          flex: 1,
-                          child: Align(
-                            alignment: .topLeft,
-                            child: Column(
-                              spacing: 10.0,
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Row(
-                                    spacing: 10.0,
-                                    children: [
-                                      // placeholder lunite counter example
-                                      Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        decoration: BoxDecoration(
-                                          color: theme
-                                              .colorScheme
-                                              .primaryContainer,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15.0),
-                                          ),
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment: .center,
-                                          children: [
-                                            ElevatedButton(
-                                              onPressed: () {},
-                                              child: Text('+'),
-                                            ),
-                                            Text('Lunites: 3'),
-
-                                            ElevatedButton(
-                                              onPressed: () {},
-                                              child: Text('-'),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      // true/false value example
-                                      Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        decoration: BoxDecoration(
-                                          color: Colors.redAccent,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15.0),
-                                          ),
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment: .center,
-                                          children: [
-                                            Text('This value is:'),
-                                            Text('False'),
-                                          ],
-                                        ),
-                                      ),
-                                      // number example
-                                      Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        decoration: BoxDecoration(
-                                          color:
-                                              theme.colorScheme.inversePrimary,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15.0),
-                                          ),
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment: .center,
-                                          children: [
-                                            Text('Some Number:'),
-                                            Text('129.56'),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                Expanded(
-                                  flex: 1,
-                                  child: Row(
-                                    spacing: 10.0,
-                                    children: [
-                                      // long widget example
-                                      Container(
-                                        padding: EdgeInsets.all(5.0),
-                                        decoration: BoxDecoration(
-                                          color: theme
-                                              .colorScheme
-                                              .secondaryContainer,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15.0),
-                                          ),
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment: .center,
-                                          children: [
-                                            Text('Super Long String Value:'),
-                                            Text(
-                                              'Woah This is A Really Long String from the Robot',
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                // last row is currently empty
-                                Expanded(flex: 1, child: Row()),
-                              ],
-                            ),
-                          ),
-                        ),
+                        Expanded(flex: 1, child: NTValuesDisplay()),
 
                         VerticalDivider(),
 
-                        // Maybe also break this out into another widget?
+                        // Maybe also break this out into another widget later?
                         // Status icons
                         Stack(
                           children: [
