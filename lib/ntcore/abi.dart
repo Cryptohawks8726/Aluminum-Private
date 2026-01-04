@@ -308,7 +308,7 @@ final class NTCoreABI {
       >("NT_FreeIntegerArray");
   static final ntReleaseEntry = _libntcore
       .lookupFunction<Void Function(UnsignedInt), void Function(int)>(
-        "NT_ReleaseHandle",
+        "NT_ReleaseEntry",
       );
   static final ntDisposeEvent = _libntcore
       .lookupFunction<
