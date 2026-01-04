@@ -24,7 +24,7 @@ Building from source is currently not supported on macos.
 `flutter run` will run the project in debug mode and `flutter build {platform}`
 will build and places a bundle in build/{platform}/{architecture}/{debug or release}/bundle
 containing the executable and all project assets/libraries.
-On macos, you'll need to install the [cocoapods](https://cocoapods.org/) package manager for xcode. To do this, you can use the [homebrew](https://brew.sh/) package manager (download it through github or through the terminal as shown on the website). Run `brew install cocoapods` to install cocoapods, then run `pod setup` to complete the setup. You may need to restart your IDE and manually type `flutter run` after initially installing.
+On macos, you'll need to install the [cocoapods](https://cocoapods.org/) package manager for xcode. To do this, you can use the [homebrew package manager](https://brew.sh/) (download it through github or through the terminal as shown on the website). Run `brew install cocoapods` to install cocoapods, then run `pod setup` to complete the setup. You may need to restart your IDE and manually type `flutter run` after initially installing.
 
 Other than that this is a normal flutter project and can run/hot reload/add packages as usual. Note that the dashboard will most likely be ran on windows; the linux and macos versions are mainly for development purposes.
 
