@@ -15,6 +15,7 @@ final NTValueNotifier stateNotifier = NTValueNotifier.fromName(
   valueName: "/SmartDashboard/currentState",
   inst: inst,
 );
+// temporary
 final NTValueNotifier valueNotifier = NTValueNotifier.fromName(
   valueName: "/SmartDashboard/gameTime",
   inst: inst,
