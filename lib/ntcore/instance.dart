@@ -18,6 +18,9 @@ class NTInstance {
   late final _listenerPoller = NTCoreABI.ntCreateListenerPoller(_inst);
   late final Pointer<WPIString> _connectionName;
 
+  /// Cache of used handles. They can be forcibly freed but you likely won't need to.
+  final Map<String, int> handlesInUse = {};
+
   bool stopTimer = false;
 
   /// Creates a new instance connected to the specific team number and port
@@ -104,7 +107,7 @@ class NTInstance {
 
   /// Fetches the value of an entry.
   NetworkTablesValue getEntryValue(String entryName) {
-    var entryHandle = NTCoreABI.ntGetEntry(_inst, toWpiString(entryName));
+    var entryHandle = _getEntryHandle(entryName);
     var value = calloc.allocate<NTValue>(sizeOf<NTValue>());
     NTCoreABI.ntGetEntryValue(entryHandle, value);
     NTCoreABI.ntReleaseEntry(entryHandle);
@@ -117,9 +120,32 @@ class NTInstance {
   // TODO: write all the other ones, and test these.
   /// Sets a boolean value in NetworkTables.
   void setEntryBool(String entryName, bool val) {
-    var entryHandle = NTCoreABI.ntGetEntry(_inst, toWpiString(entryName));
-    NTCoreABI.ntSetBoolean(entryHandle, 0, val ? 1 : 0);
-    NTCoreABI.ntReleaseEntry(entryHandle);
+    NTCoreABI.ntSetBoolean(_getEntryHandle(entryName), 0, val ? 1 : 0);
+  }
+
+  void setEntryDouble(String entryName, double val) {
+    NTCoreABI.ntSetDouble(_getEntryHandle(entryName), 0, val);
+  }
+
+  int _getEntryHandle(String entryName) {
+    var maybeCached = handlesInUse[entryName];
+    if (maybeCached != null) {
+      return maybeCached;
+    } else {
+      var newHandle = NTCoreABI.ntGetEntry(_inst, toWpiString(entryName));
+      handlesInUse[entryName] = newHandle;
+      return newHandle;
+    }
+  }
+
+  /// Frees the handle used to set or get values from a specific entry in NetworkTables, if
+  /// there is one in use. Call this if you were setting a value or reading from it using
+  /// getEntryValue and no longer need to.
+  void freeEntryHandle(String entryName) {
+    var maybeCached = handlesInUse[entryName];
+    if (maybeCached != null) {
+      NTCoreABI.ntReleaseEntry(maybeCached);
+    }
   }
 }
 

@@ -126,7 +126,47 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                         VerticalDivider(),
 
                         // List of custom displayed values
-                        Expanded(flex: 1, child: NTValuesDisplay()),
+                        Expanded(
+                          flex: 1,
+                          child: NTValuesDisplay(
+                            children: [
+                              BooleanDisplayTile(
+                                valueName: '/SmartDashboard/dummyBoolean',
+                                displayText: 'Boolean value is: ',
+                              ),
+                              NumberDisplayTile(
+                                valueName: '/SmartDashboard/gameTime',
+                                displayText: 'Game Time (Seconds):',
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.primaryContainer,
+                              ),
+                              NumberColorChangeTile(
+                                valueName: '/SmartDashboard/luniteCount',
+                                displayText: 'Lunite Count: ',
+                                decimalPlaces: 0,
+                                colorPicker: (double? n) {
+                                  if (n != null) {
+                                    if (n >= 3) {
+                                      return Colors.green;
+                                    } else if (n > 0) {
+                                      return Colors.yellow.shade800;
+                                    }
+                                  }
+                                  return Colors.redAccent;
+                                },
+                              ),
+                              StringDisplayTile(
+                                valueName: '/SmartDashboard/currentState',
+                                displayText: 'Robot is in',
+                              ),
+                              IncrementableCounterTile(
+                                valueName: '/SmartDashboard/luniteCount',
+                                displayText: 'Lunite Count: ',
+                              ),
+                            ],
+                          ),
+                        ),
 
                         VerticalDivider(),
 
