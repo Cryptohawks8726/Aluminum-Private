@@ -1,4 +1,5 @@
-# DriverDashboard
+![logo](images/logo.jpeg)
+# 8726 DriverDashboard
 
 Dashboard for 8726 drivers. Can communicate with the robot to send and receive info.
 
