@@ -378,6 +378,11 @@ final class NTCoreABI {
         "NT_DestroyListenerPoller",
       );
 
+  static final ntIsConnected = _libntcore
+      .lookupFunction<Int Function(UnsignedInt), int Function(int)>(
+        "NT_IsConnected",
+      );
+
   // I literally went and checked the source code and all NT_InitValue does is
   // void NT_InitValue(NT_Value* value) {
   //   value->type = NT_UNASSIGNED;

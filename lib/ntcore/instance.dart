@@ -21,6 +21,10 @@ class NTInstance {
   /// Cache of used handles. They can be forcibly freed but you likely won't need to.
   final Map<String, int> handlesInUse = {};
 
+  /// Connection notifier - you can listen to this to be notified when there
+  /// is a change in network connection status.
+  final NTConnectionNotifier connectionNotifier = NTConnectionNotifier();
+
   bool stopTimer = false;
 
   /// Creates a new instance connected to the specific team number and port
@@ -44,6 +48,10 @@ class NTInstance {
       timer.cancel();
       return;
     }
+
+    // Update connection info too since it's convenient to do here.
+    connectionNotifier.isConnected = NTCoreABI.ntIsConnected(_inst) == 1;
+
     var len = calloc.allocate<Size>(sizeOf<Size>());
     var queue = NTCoreABI.ntReadListenerQueue(_listenerPoller, len);
 
@@ -145,6 +153,17 @@ class NTInstance {
     var maybeCached = handlesInUse[entryName];
     if (maybeCached != null) {
       NTCoreABI.ntReleaseEntry(maybeCached);
+    }
+  }
+}
+
+class NTConnectionNotifier with ChangeNotifier {
+  bool _isConnected = false;
+  bool get isConnected => _isConnected;
+  set isConnected(bool b) {
+    if (_isConnected != b) {
+      _isConnected = b;
+      notifyListeners();
     }
   }
 }

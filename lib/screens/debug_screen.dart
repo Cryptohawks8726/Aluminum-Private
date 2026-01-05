@@ -1,6 +1,5 @@
 import 'package:driver_dashboard/ntcore/instance.dart';
 import 'package:driver_dashboard/ntreferences.dart';
-import 'package:driver_dashboard/ntcore/values.dart';
 import "package:driver_dashboard/widgets/pid_container.dart";
 import 'package:flutter/material.dart';
 
@@ -82,21 +81,7 @@ class NTPrefixDisplay extends StatelessWidget {
           ListenableBuilder(
             listenable: c.notifier,
             builder: (context, _) {
-              var s = switch (c.notifier.currentValue) {
-                // switch statement monster, could be improved
-                NTDoubleValue(:final value) => value.toString(),
-                NTBooleanValue(:final value) => value.toString(),
-                NTIntegerValue(:final value) => value.toString(),
-                NTStringValue(:final value) => value,
-                NTDoubleArrayValue(:final value) => value.toString(),
-                NTBooleanArrayValue(:final value) => value.toString(),
-                NTIntegerArrayValue(:final value) => value.toString(),
-                NTStringArrayValue(:final value) => value.toString(),
-                NTRawValue(:final value) =>
-                  value
-                      .toString(), // "and coop has delivered undercooked salmon"
-                _ => 'Unable to Retrieve Data',
-              };
+              var s = c.notifier.currentValue.toString();
               return Text("${c.title}: $s", style: style);
             },
           ),

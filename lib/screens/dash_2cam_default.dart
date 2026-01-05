@@ -1,3 +1,4 @@
+import 'package:driver_dashboard/ntreferences.dart';
 import 'package:driver_dashboard/settings.dart';
 import 'package:driver_dashboard/widgets/field_view.dart';
 import 'package:driver_dashboard/widgets/nt_values_display.dart';
@@ -183,9 +184,22 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                             crossAxisAlignment: .center,
                             children: [
                               // these are all meaningless placeholders
-                              Icon(Icons.control_camera, color: Colors.green),
-                              Icon(Icons.two_wheeler, color: Colors.green),
-                              Icon(Icons.battery_0_bar, color: Colors.red),
+                              ListenableBuilder(
+                                listenable: inst.connectionNotifier,
+                                builder: (context, child) {
+                                  if (inst.connectionNotifier.isConnected) {
+                                    return Icon(
+                                      Icons.cast_connected,
+                                      color: Colors.green,
+                                    );
+                                  } else {
+                                    return Icon(
+                                      Icons.signal_wifi_connected_no_internet_4,
+                                      color: Colors.red,
+                                    );
+                                  }
+                                },
+                              ),
                             ],
                           ),
                         ),
