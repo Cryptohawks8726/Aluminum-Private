@@ -70,10 +70,11 @@ class _FieldViewWidgetState extends State<FieldViewWidget> {
 
   @override
   Widget build(BuildContext context) {
+    Color borderColor = Theme.of(context).colorScheme.onPrimary;
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[900],
-        border: Border.all(color: Colors.blue, width: 2),
+        border: Border.all(color: borderColor, width: 2),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -81,7 +82,7 @@ class _FieldViewWidgetState extends State<FieldViewWidget> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: borderColor,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(6),
                 topRight: Radius.circular(6),
@@ -92,11 +93,7 @@ class _FieldViewWidgetState extends State<FieldViewWidget> {
               children: [
                 const Text(
                   'Field View',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   'X: ${robotPosition[0].toStringAsFixed(2)}m  Y: ${robotPosition[1].toStringAsFixed(2)}m  θ: ${robotPosition[2].toStringAsFixed(1)}°',

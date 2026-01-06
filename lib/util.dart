@@ -25,17 +25,22 @@ class PID {
 
 final ThemeData appTheme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
-    // TODO: get correct team color and make a scheme out of it
+    // Various colors I stole from the team colors, and also blue and red
+    // dark blue
+    // seedColor: Color.fromARGB(0xFF, 0x0B, 0x35, 0x62),
+    // team navy
+    seedColor: Color.fromARGB(0xFF, 0x04, 0x00, 0x3b),
+    // a rebuilt color - reddish
+    // seedColor: Color.fromARGB(0xFF, 0xea, 0x57, 0x2e),
+    // seedColor: Colors.blue,
+    // seedColor: Colors.red,
 
-    // seedColor: Color.fromARGB(0, 0, 0, 0),
-    seedColor: Colors.indigo,
-
+    // seedColor: Colors.indigo,
     brightness: .dark,
   ),
 
   textTheme: TextTheme(),
 );
-
 
 // LAYOUT WIDGETS //
 
