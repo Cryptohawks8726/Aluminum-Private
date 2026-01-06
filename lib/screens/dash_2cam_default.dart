@@ -1,3 +1,4 @@
+import 'package:driver_dashboard/ntcore/values.dart';
 import 'package:driver_dashboard/ntreferences.dart';
 import 'package:driver_dashboard/settings.dart';
 import 'package:driver_dashboard/widgets/field_view.dart';
@@ -83,33 +84,85 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                 spacing: 10,
                 children: [
                   // Top status bar (match #, time, alliance)
+                  // Messy since it's a bunch of ListenableBuilders - could maybe
+                  // move this to another function or something
+
+                  // Match Number
                   Stack(
                     children: [
                       Align(
                         alignment: .centerLeft,
-                        child: Text(
-                          'Match 1',
-                          style: theme.textTheme.displaySmall,
+                        child: ListenableBuilder(
+                          listenable: matchNumberNotifier,
+                          builder: (context, child) {
+                            int? num =
+                                switch (matchNumberNotifier.currentValue) {
+                                  NTIntegerValue(:final value) =>
+                                    value > 0 ? value : null,
+                                  _ => null,
+                                };
+                            return Text(
+                              (num != null) ? 'Match $num' : 'No Active Match',
+                              style: theme.textTheme.displaySmall,
+                            );
+                          },
                         ),
                       ),
+
+                      // Game Time
                       Align(
                         alignment: .center,
-                        child: Text(
-                          '-:--',
-                          style: theme.textTheme.displayLarge,
+                        child: ListenableBuilder(
+                          listenable: gameTimeNotifier,
+                          builder: (context, child) {
+                            double? t = switch (gameTimeNotifier.currentValue) {
+                              NTDoubleValue(:final value) =>
+                                value >= 0.0 ? value : null,
+                              _ => null,
+                            };
+                            return Text(
+                              (t != null)
+                                  ? formatTime(timeInSeconds: t.toInt())
+                                  : '-:--',
+                              style: theme.textTheme.displayLarge,
+                            );
+                          },
                         ),
                       ),
+
+                      // Alliance
                       Align(
                         alignment: .centerRight,
-                        child: Text(
-                          'Blue Alliance',
-                          style: theme.textTheme.displaySmall?.copyWith(
-                            color: Colors.blueAccent,
-                          ),
+                        child: ListenableBuilder(
+                          listenable: isRedAllianceNotifier,
+                          builder: (context, child) {
+                            switch (isRedAllianceNotifier.currentValue) {
+                              case NTBooleanValue(:final value):
+                                if (value) {
+                                  return Text(
+                                    'Red Alliance',
+                                    style: theme.textTheme.displaySmall
+                                        ?.copyWith(color: Colors.red),
+                                  );
+                                } else {
+                                  return Text(
+                                    'Blue Alliance',
+                                    style: theme.textTheme.displaySmall
+                                        ?.copyWith(color: Colors.blueAccent),
+                                  );
+                                }
+                              default:
+                                return Text(
+                                  'Unknown Alliance',
+                                  style: theme.textTheme.displaySmall,
+                                );
+                            }
+                          },
                         ),
                       ),
                     ],
                   ),
+
                   // field view with robot overlay
                   Expanded(flex: 2, child: FieldViewWidget()),
 
@@ -132,8 +185,8 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                           child: NTValuesDisplay(
                             children: [
                               BooleanDisplayTile(
-                                valueName: '/SmartDashboard/dummyBoolean',
-                                displayText: 'Boolean value is: ',
+                                valueName: '/FMSInfo/IsRedAlliance',
+                                displayText: 'Are we red?',
                               ),
                               NumberDisplayTile(
                                 valueName: '/SmartDashboard/gameTime',

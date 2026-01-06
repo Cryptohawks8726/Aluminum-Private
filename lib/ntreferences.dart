@@ -23,6 +23,14 @@ final robotPosNotifier = NTValueNotifier.fromName(
   valueName: '/SmartDashboard/robot2DPosition',
   inst: inst,
 );
+final matchNumberNotifier = NTValueNotifier.fromName(
+  valueName: '/FMSInfo/MatchNumber',
+  inst: inst,
+);
+final isRedAllianceNotifier = NTValueNotifier.fromName(
+  valueName: '/FMSInfo/IsRedAlliance',
+  inst: inst,
+);
 
 class PIDdata {
   // temporary

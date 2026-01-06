@@ -1,11 +1,34 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_size_getter/file_input.dart' show FileInput;
+import 'package:image_size_getter/image_size_getter.dart' show ImageSizeGetter;
 import '../ntreferences.dart';
 import '../ntcore/values.dart';
 import 'dart:math' as math;
 
+// Constants to update per game.
+// Double check coordinates please! Make sure there's actually an origin in the bottom left
+// and adjust the code if there isn't.
 // FRC Field dimensions in meters
 const double fieldLengthMeters = 16.54;
 const double fieldWidthMeters = 8.21;
+// Path to the field image file.
+const String fieldImagePath = 'images/2025-field.png';
+// Position of the origin and size of the field, in pixels
+const double fieldOriginX = 537, fieldOriginY = 1702;
+const double fieldSizeX = 2938, fieldSizeY = 1469;
+
+// Calculated values from the constants to save time later.
+// Gets the image size at app startup
+final fieldImageSize = ImageSizeGetter.getSizeResult(
+  FileInput(File(fieldImagePath)),
+).size;
+// Same as the other constants just divided by image size
+final double fieldOriginRatioX = fieldOriginX / fieldImageSize.width;
+final double fieldOriginRatioY = fieldOriginY / fieldImageSize.height;
+final double fieldSizeRatioX = fieldSizeX / fieldImageSize.width;
+final double fieldSizeRatioY = fieldSizeY / fieldImageSize.height;
 
 class FieldViewWidget extends StatefulWidget {
   const FieldViewWidget({super.key});
@@ -20,7 +43,7 @@ class _FieldViewWidgetState extends State<FieldViewWidget> {
   @override
   void initState() {
     super.initState();
-    
+
     // Listen to robot position updates from NetworkTables
     robotPosNotifier.addListener(_updateRobotPosition);
   }
@@ -77,21 +100,39 @@ class _FieldViewWidgetState extends State<FieldViewWidget> {
                 ),
                 Text(
                   'X: ${robotPosition[0].toStringAsFixed(2)}m  Y: ${robotPosition[1].toStringAsFixed(2)}m  θ: ${robotPosition[2].toStringAsFixed(1)}°',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ],
             ),
           ),
+          // The actual field - stack of the image and everything that needs to be drawn on it.
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                return CustomPaint(
-                  size: Size(constraints.maxWidth, constraints.maxHeight),
-                  painter: FieldPainter(
-                    robotPosition: robotPosition,
+                final double scaleX =
+                    constraints.maxWidth / fieldImageSize.width;
+                final double scaleY =
+                    constraints.maxHeight / fieldImageSize.height;
+                // image scale factor to fit within the box
+                final double scale = math.min(scaleX, scaleY);
+                final Size scaledSize = Size(
+                  fieldImageSize.width * scale,
+                  fieldImageSize.height * scale,
+                );
+                return Align(
+                  alignment: .center,
+                  child: Stack(
+                    children: [
+                      Image.asset(
+                        fieldImagePath,
+                        width: scaledSize.width,
+                        height: scaledSize.height,
+                      ),
+                      CustomPaint(
+                        size: scaledSize,
+                        painter: FieldPainter(robotPosition: robotPosition),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -110,118 +151,25 @@ class FieldPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final double scaleX = size.width / fieldLengthMeters;
-    final double scaleY = size.height / fieldWidthMeters;
-    final double scale = math.min(scaleX, scaleY) * 0.95;
+    final x =
+        (fieldOriginRatioX +
+            robotPosition[0] / fieldLengthMeters * fieldSizeRatioX) *
+        size.width;
+    // note that Y is flipped since in FRC origin is usually bottom left
+    final y =
+        (fieldOriginRatioY -
+            robotPosition[1] / fieldWidthMeters * fieldSizeRatioY) *
+        size.height;
 
-    final double offsetX = (size.width - (fieldLengthMeters * scale)) / 2;
-    final double offsetY = (size.height - (fieldWidthMeters * scale)) / 2;
-
-    final fieldPaint = Paint()
-      ..color = const Color(0xFF2A2A2A)
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRect(
-      Rect.fromLTWH(
-        offsetX,
-        offsetY,
-        fieldLengthMeters * scale,
-        fieldWidthMeters * scale,
-      ),
-      fieldPaint,
-    );
-
-    final borderPaint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-
-    canvas.drawRect(
-      Rect.fromLTWH(
-        offsetX,
-        offsetY,
-        fieldLengthMeters * scale,
-        fieldWidthMeters * scale,
-      ),
-      borderPaint,
-    );
-
-    final centerLinePaint = Paint()
-      ..color = Colors.white.withOpacity(0.3)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-
-    canvas.drawLine(
-      Offset(offsetX + (fieldLengthMeters * scale / 2), offsetY),
-      Offset(offsetX + (fieldLengthMeters * scale / 2), offsetY + (fieldWidthMeters * scale)),
-      centerLinePaint,
-    );
-
-    final gridPaint = Paint()
-      ..color = Colors.white.withOpacity(0.1)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-
-    for (int i = 1; i < fieldLengthMeters.toInt(); i++) {
-      canvas.drawLine(
-        Offset(offsetX + (i * scale), offsetY),
-        Offset(offsetX + (i * scale), offsetY + (fieldWidthMeters * scale)),
-        gridPaint,
-      );
-    }
-
-    for (int i = 1; i < fieldWidthMeters.toInt(); i++) {
-      canvas.drawLine(
-        Offset(offsetX, offsetY + (i * scale)),
-        Offset(offsetX + (fieldLengthMeters * scale), offsetY + (i * scale)),
-        gridPaint,
-      );
-    }
-
-    final blueAlliancePaint = Paint()
-      ..color = Colors.blue.withOpacity(0.2)
-      ..style = PaintingStyle.fill;
-
-    final redAlliancePaint = Paint()
-      ..color = Colors.red.withOpacity(0.2)
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRect(
-      Rect.fromLTWH(
-        offsetX,
-        offsetY,
-        fieldLengthMeters * scale * 0.25,
-        fieldWidthMeters * scale,
-      ),
-      blueAlliancePaint,
-    );
-
-    canvas.drawRect(
-      Rect.fromLTWH(
-        offsetX + (fieldLengthMeters * scale * 0.75),
-        offsetY,
-        fieldLengthMeters * scale * 0.25,
-        fieldWidthMeters * scale,
-      ),
-      redAlliancePaint,
-    );
-
-    _drawRobot(canvas, robotPosition, scale, offsetX, offsetY);
+    _drawRobot(canvas, x, y, robotPosition[2]);
   }
 
-  void _drawRobot(Canvas canvas, List<double> position, double scale, double offsetX, double offsetY) {
-    final double x = position[0];
-    final double y = position[1];
-    final double rotation = position[2];
-
-    final double canvasX = offsetX + (x * scale);
-    final double canvasY = offsetY + ((fieldWidthMeters - y) * scale);
-
-    final double robotWidth = 0.9 * scale;
-    final double robotHeight = 0.9 * scale;
+  void _drawRobot(Canvas canvas, double x, double y, double rotation) {
+    final double robotWidth = 30;
+    final double robotHeight = 30;
 
     canvas.save();
-    canvas.translate(canvasX, canvasY);
+    canvas.translate(x, y);
     canvas.rotate(-rotation * math.pi / 180);
 
     final robotPaint = Paint()
