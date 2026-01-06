@@ -35,13 +35,13 @@ class StateBindingsDisplay extends StatelessWidget {
                 Align(
                   alignment: .centerLeft,
                   child: Text(
-                    'Robot is currently in: ',
-                    style: theme.textTheme.headlineMedium,
+                    'Robot is in: ',
+                    style: theme.textTheme.headlineSmall,
                   ),
                 ),
                 Align(
                   alignment: .centerRight,
-                  child: Text(state, style: theme.textTheme.headlineMedium),
+                  child: Text(state, style: theme.textTheme.headlineSmall),
                 ),
               ],
             ),

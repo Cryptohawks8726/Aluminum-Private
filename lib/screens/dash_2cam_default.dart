@@ -164,11 +164,11 @@ class _Default2CamDashboardState extends State<Default2CamDashboard> {
                   ),
 
                   // field view with robot overlay
-                  Expanded(flex: 2, child: FieldViewWidget()),
+                  Expanded(flex: 3, child: FieldViewWidget()),
 
                   // Lower section under field
                   Expanded(
-                    flex: 1,
+                    flex: 2,
                     child: Row(
                       mainAxisAlignment: .center,
                       crossAxisAlignment: .center,
