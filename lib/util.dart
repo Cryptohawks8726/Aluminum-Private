@@ -1,3 +1,5 @@
+import 'package:aluminum/ntcore/instance.dart';
+import 'package:aluminum/ntreferences.dart';
 import 'package:aluminum/settings.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +29,9 @@ final ThemeData appTheme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
     // Various colors I stole from the team colors, and also blue and red
     // dark blue
-    // seedColor: Color.fromARGB(0xFF, 0x0B, 0x35, 0x62),
+    primary: Color.fromARGB(0xFF, 0x0B, 0x35, 0x62),
+    secondary: Colors.white,
+    tertiary: Color.fromARGB(0xFF, 0x04, 0x00, 0x3b),
     // team navy
     seedColor: Color.fromARGB(0xFF, 0x04, 0x00, 0x3b),
     // a rebuilt color - reddish
@@ -119,6 +123,49 @@ class PIDTextField extends StatelessWidget {
         SizedBox(width: 20),
 
         Expanded(flex: 1, child: TextField(controller: controller)),
+      ],
+    );
+  }
+}
+
+class NTTopicData {
+  bool isExpanded = false;
+  final NTValueNotifier notifier;
+  final String title;
+
+  NTTopicData({required this.notifier, required this.title});
+}
+
+class NTTopicDisplay extends StatelessWidget {
+  NTTopicDisplay({super.key});
+
+  final TextStyle style = TextStyle(fontSize: 15);
+
+  // fill up this section with any listeners you want to see
+  final List<NTTopicData> topics = <NTTopicData>[
+    NTTopicData(notifier: gameTimeNotifier, title: "gameTime"),
+    NTTopicData(notifier: stateNotifier, title: "currentState"),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        ListTile(
+          title: Text(
+            "NetworkTables:",
+            style: TextStyle(fontSize: 25, fontWeight: .bold),
+          ),
+        ),
+        Divider(),
+        for (NTTopicData c in topics)
+          ListenableBuilder(
+            listenable: c.notifier,
+            builder: (context, _) {
+              var s = c.notifier.currentValue.toString();
+              return Text("${c.title}: $s", style: style);
+            },
+          ),
       ],
     );
   }

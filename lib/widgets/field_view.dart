@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_size_getter/file_input.dart' show FileInput;
-import 'package:image_size_getter/image_size_getter.dart' show ImageSizeGetter;
+import 'package:image_size_getter/image_size_getter.dart' show ImageSizeGetter, SizeResult;
 import '../ntreferences.dart';
 import '../ntcore/values.dart';
 import 'dart:math' as math;
@@ -15,18 +16,16 @@ import 'dart:math' as math;
 const double fieldLengthMeters = 16.54;
 const double fieldWidthMeters = 8.21;
 // Path to the field image file.
-const String fieldImagePath = 'images/2025-field.png';
+const String fieldImagePath = "images/2025-field.png";
 // Position of the origin and size of the field, in pixels
 const double fieldOriginX = 537, fieldOriginY = 1702;
 const double fieldSizeX = 2938, fieldSizeY = 1469;
 
 // Calculated values from the constants to save time later.
-// Gets the image size at app startup
-final fieldImageSize = ImageSizeGetter.getSizeResult(
-  FileInput(
-    File(kDebugMode ? fieldImagePath : 'data/flutter_assets/$fieldImagePath'),
-  ),
-).size;
+// Manually inputed field size (4000x1927)
+const Size fieldImageSize = Size(4000, 1927);
+
+
 // Same as the other constants just divided by image size
 final double fieldOriginRatioX = fieldOriginX / fieldImageSize.width;
 final double fieldOriginRatioY = fieldOriginY / fieldImageSize.height;

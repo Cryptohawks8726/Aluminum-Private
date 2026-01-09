@@ -1,20 +1,20 @@
 import 'package:aluminum/ntcore/instance.dart';
+import 'package:aluminum/ntreferences.dart';
 import 'package:aluminum/util.dart';
 import 'package:flutter/material.dart';
 
 class PIDContainer extends StatefulWidget {
   final String title;
-  // [0] -> p
-  // [1] -> i
-  // [2] -> d
-  List<NTValueNotifier>? notifierArray;
+  final String subsystemName;
+  late final PIDdata pidData;
 
-  PIDContainer({required this.title, super.key});
-  PIDContainer.fromNotifierArray({
-    required this.notifierArray,
+  PIDContainer({
+    required this.subsystemName,
     required this.title,
     super.key,
-  });
+  }) {
+    pidData = PIDdata(subsystemName: subsystemName);
+  }
 
   @override
   State<PIDContainer> createState() => _PIDContainerState();
@@ -22,34 +22,20 @@ class PIDContainer extends StatefulWidget {
 
 class _PIDContainerState extends State<PIDContainer> {
   // data
-
-  // TODO: initialize PID object to have correct values from nt
-  PID myPID = PID(); // initializes all to 0.0
-  final TextEditingController pcontrol = TextEditingController();
-  final TextEditingController icontrol = TextEditingController();
-  final TextEditingController dcontrol = TextEditingController();
+  late PID myPID = PID(); // initializes all to 0.0
+  late final TextEditingController pcontrol = TextEditingController();
+  late final TextEditingController icontrol = TextEditingController();
+  late final TextEditingController dcontrol = TextEditingController();
   late final List controllers = <TextEditingController>[
     pcontrol,
     icontrol,
     dcontrol,
   ];
 
-  String valueText = "";
-
-  void refreshText() => setState(() {
-    valueText = "Current PID Values: ${myPID.p}, ${myPID.i}, ${myPID.d}";
-  });
-  // controller's text will initially be at zero for now
   // TODO: initialize text controllers to have their current PID values
   @override
   void initState() {
     super.initState();
-    if (widget.notifierArray != null) {}
-
-    for (TextEditingController c in controllers) {
-      c.text = "0.0";
-    }
-    refreshText();
   }
 
   // dispose controllers to free up memory
@@ -65,7 +51,7 @@ class _PIDContainerState extends State<PIDContainer> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.blueGrey,
+        color: appTheme.colorScheme.primary,
         borderRadius: BorderRadius.circular(20),
       ),
       constraints: BoxConstraints(maxWidth: 500),
@@ -81,11 +67,31 @@ class _PIDContainerState extends State<PIDContainer> {
             ),
           ),
 
-          PIDTextField(label: "Kp:", controller: pcontrol),
-          PIDTextField(label: "Ki:", controller: icontrol),
-          PIDTextField(label: "Kd:", controller: dcontrol),
-          // show current values
-          Text(valueText),
+          // wrap PIDTextFields in a listenable builder to get value updates
+          ListenableBuilder(
+            listenable: widget.pidData.pNotif,
+            builder: (context, _) {
+            pcontrol.text = widget.pidData.pNotif.currentValue.toString();
+            return Column(
+              children: [
+                PIDTextField(label: "Kp:", controller: pcontrol),
+              ],
+            );
+          }),
+          ListenableBuilder(
+            listenable: widget.pidData.iNotif,
+            builder: (context, _) {
+              icontrol.text = widget.pidData.iNotif.currentValue.toString();
+              return PIDTextField(label: "Ki:", controller: icontrol);
+            },
+          ),
+          ListenableBuilder(
+            listenable: widget.pidData.dNotif,
+            builder: (context, _) {
+              dcontrol.text = widget.pidData.dNotif.currentValue.toString();
+              return PIDTextField(label: "Kd:", controller: dcontrol);
+            },
+          ),
 
           FilledButton(
             onPressed: () {
@@ -93,7 +99,7 @@ class _PIDContainerState extends State<PIDContainer> {
                 myPID.p = double.parse(pcontrol.text);
                 myPID.i = double.parse(icontrol.text);
                 myPID.d = double.parse(dcontrol.text);
-                // TODO: send through network tables
+                widget.pidData.setValues(myPID.p, myPID.i, myPID.d);
               } on FormatException {
                 // when values are not doubles
                 showDialog(
@@ -106,9 +112,12 @@ class _PIDContainerState extends State<PIDContainer> {
                   ),
                 );
               }
-              refreshText();
             },
-            child: const Text("Save"),
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(appTheme.colorScheme.secondary),
+              
+            ),
+            child: Text("Save", style: TextStyle(color: appTheme.colorScheme.tertiary),),
           ),
         ],
       ),
