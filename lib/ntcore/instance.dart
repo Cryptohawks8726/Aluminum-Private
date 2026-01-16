@@ -135,6 +135,26 @@ class NTInstance {
     NTCoreABI.ntSetDouble(_getEntryHandle(entryName), 0, val);
   }
 
+  // --- ADDED THIS METHOD TO SUPPORT WAYPOINTS ---
+  void setEntryDoubleArray(String entryName, List<double> val) {
+    // Requires allocating a native array
+    final ptr = calloc<Double>(val.length);
+    for (var i = 0; i < val.length; i++) {
+      ptr[i] = val[i];
+    }
+    try {
+      NTCoreABI.ntSetDoubleArray(
+        _getEntryHandle(entryName),
+        0,
+        ptr,
+        val.length,
+      );
+    } finally {
+      calloc.free(ptr);
+    }
+  }
+  // ----------------------------------------------
+
   int _getEntryHandle(String entryName) {
     var maybeCached = handlesInUse[entryName];
     if (maybeCached != null) {

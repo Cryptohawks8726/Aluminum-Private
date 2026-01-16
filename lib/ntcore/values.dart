@@ -17,6 +17,7 @@ sealed class NetworkTablesValue {
   String toString() {
     return "Unknown Value";
   }
+
   /// returns 0 in normal class
   dynamic getValue() => 0;
 }
@@ -34,6 +35,7 @@ class NTBooleanValue extends NetworkTablesValue {
   String toString() {
     return value.toString();
   }
+
   /// returns the value of correct type
   @override
   bool getValue() => value;
@@ -47,8 +49,9 @@ class NTDoubleValue extends NetworkTablesValue {
   String toString() {
     return value.toString();
   }
+
   /// returns the value of correct type
-  @override 
+  @override
   double getValue() {
     return value;
   }
@@ -62,6 +65,7 @@ class NTStringValue extends NetworkTablesValue {
   String toString() {
     return value;
   }
+
   /// returns the value of correct type
   @override
   String getValue() => value;
@@ -75,6 +79,7 @@ class NTRawValue extends NetworkTablesValue {
   String toString() {
     return value.toString();
   }
+
   /// returns the value of correct type
   @override
   List<int> getValue() => value;
@@ -88,6 +93,7 @@ class NTBooleanArrayValue extends NetworkTablesValue {
   String toString() {
     return value.toString();
   }
+
   /// returns the value of correct type
   @override
   List<bool> getValue() => value;
@@ -101,6 +107,7 @@ class NTDoubleArrayValue extends NetworkTablesValue {
   String toString() {
     return value.toString();
   }
+
   /// returns the value of correct type
   @override
   List<double> getValue() => value;
@@ -114,6 +121,7 @@ class NTStringArrayValue extends NetworkTablesValue {
   String toString() {
     return value.toString();
   }
+
   /// returns the value of correct type
   @override
   List<String> getValue() => value;
@@ -127,6 +135,7 @@ class NTIntegerValue extends NetworkTablesValue {
   String toString() {
     return value.toString();
   }
+
   /// returns the value of correct type
   @override
   int getValue() => value;
@@ -140,6 +149,7 @@ class NTIntegerArrayValue extends NetworkTablesValue {
   String toString() {
     return value.toString();
   }
+
   /// returns the value of correct type
   @override
   List<int> getValue() => value;
