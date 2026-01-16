@@ -43,15 +43,20 @@ final isRedAllianceNotifier = NTValueNotifier.fromName(
   valueName: '/FMSInfo/IsRedAlliance',
   inst: inst,
 );
+// Path to the auto chooser
 final autoChooserPath = '/SmartDashboard/autoChooser';
+
+/// Path to the auto chooser's "active" property. This is where you READ the current auto name.
 final autoChooserActivePath = '$autoChooserPath/active';
+
+/// Path to the auto chooser's "selected" property. This is where you SET the current auto name.
 final autoChooserSelectedPath = '$autoChooserPath/seleced';
 final autoChooserOptionsNotifier = NTValueNotifier.fromName(
   valueName: '$autoChooserPath/options',
   inst: inst,
 );
 final autoChooserSelectedNotifier = NTValueNotifier.fromName(
-  valueName: autoChooserSelectedPath,
+  valueName: autoChooserActivePath,
   inst: inst,
 );
 

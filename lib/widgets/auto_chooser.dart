@@ -73,9 +73,9 @@ class _AutoChooserState extends State<AutoChooser> {
         DropdownButton<String>(
           onChanged: (String? val) {
             if (val != null) {
-              inst.setEntryString('/SmartDashboard/autoChooser/selected', val);
+              inst.setEntryString(autoChooserSelectedPath, val);
             } else {
-              inst.setEntryString('/SmartDashboard/autoChooser/selected', '');
+              inst.setEntryString(autoChooserSelectedPath, '');
             }
           },
           items:
