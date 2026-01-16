@@ -5,6 +5,7 @@ import 'package:aluminum/screens/debug_screen.dart';
 import 'package:aluminum/screens/settings_screen.dart';
 import 'package:aluminum/settings.dart';
 import 'package:aluminum/util.dart';
+import 'package:aluminum/widgets/auto_chooser.dart';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -98,27 +99,7 @@ class _DriverDashboardState extends State<DriverDashboard> {
                   horizontal: 12.0,
                   vertical: 12.0,
                 ),
-                child: Column(
-                  crossAxisAlignment: .start,
-                  children: [
-                    Text('Selected Auto:'),
-                    // TODO: Swap for proper auto chooser widget
-                    DropdownButton(
-                      onChanged: (val) {},
-                      items: [
-                        DropdownMenuItem(
-                          value: 'SomeReallyLongAutoName',
-                          child: Text('SomeReallyLongAutoName'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'OtherReallyLongAutoName',
-                          child: Text('OtherReallyLongAutoName'),
-                        ),
-                      ],
-                      value: 'SomeReallyLongAutoName',
-                    ),
-                  ],
-                ),
+                child: AutoChooser(),
               ),
 
               onDestinationSelected: (int idx) {

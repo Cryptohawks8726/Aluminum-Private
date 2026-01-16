@@ -72,6 +72,7 @@ class NTInstance {
         return;
       }
       var nameDart = wpiToDartString(name);
+      // print('Received event for $nameDart');
       calloc.free(name);
       // don't think freeCharArray is needed here? maybe double check that later
       NTValueNotifier? maybeNotifier =
@@ -133,6 +134,10 @@ class NTInstance {
 
   void setEntryDouble(String entryName, double val) {
     NTCoreABI.ntSetDouble(_getEntryHandle(entryName), 0, val);
+  }
+
+  void setEntryString(String entryName, String val) {
+    NTCoreABI.ntSetString(_getEntryHandle(entryName), 0, toWpiString(val));
   }
 
   int _getEntryHandle(String entryName) {
@@ -259,11 +264,16 @@ NetworkTablesValue _cValueToDart(NTValue value) {
       out = NTIntegerValue(value.lastChange, value.serverTime, value.data.vInt);
       break;
     case ntTypeString:
-      out = NTStringValue(
-        value.lastChange,
-        value.serverTime,
-        value.data.vString.str.toDartString(length: value.data.vString.len),
-      );
+      // Apparently this can return nullptr
+      if (value.data.vString.str.address != 0) {
+        out = NTStringValue(
+          value.lastChange,
+          value.serverTime,
+          value.data.vString.str.toDartString(length: value.data.vString.len),
+        );
+      } else {
+        out = NTStringValue(value.lastChange, value.serverTime, "");
+      }
       break;
     case ntTypeRaw:
       var rawArr = value.data.vRaw.data.asTypedList(value.data.vRaw.size);
