@@ -20,7 +20,7 @@ const double fieldWidthMeters = 8.21;
 const String fieldImagePath = "images/2026-field.png";
 // Position of the origin and size of the field, in pixels
 const double fieldOriginX = 255, fieldOriginY = 1920;
-const double fieldSizeX = 2938, fieldSizeY = 1469;
+const double fieldSizeX = 3679, fieldSizeY = 1804;
 
 // Calculated values from the constants to save time later.
 // Manually inputed field size (4000x1927)
