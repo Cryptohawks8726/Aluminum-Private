@@ -50,7 +50,7 @@ final autoChooserPath = '/SmartDashboard/autoChooser';
 final autoChooserActivePath = '$autoChooserPath/active';
 
 /// Path to the auto chooser's "selected" property. This is where you SET the current auto name.
-final autoChooserSelectedPath = '$autoChooserPath/seleced';
+final autoChooserSelectedPath = '$autoChooserPath/selected';
 final autoChooserOptionsNotifier = NTValueNotifier.fromName(
   valueName: '$autoChooserPath/options',
   inst: inst,

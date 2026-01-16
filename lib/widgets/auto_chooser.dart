@@ -59,11 +59,14 @@ class _AutoChooserState extends State<AutoChooser> {
         break;
     }
 
-    if (selectedVal != null && !opts.contains(selectedVal)) {
-      opts.add(selectedVal!);
-    } else if (selectedVal == null) {
+    if (selectedVal == null) {
       selectedVal = 'None';
       opts.add('None');
+    } else {
+      opts.remove('None');
+      if (!opts.contains(selectedVal!)) {
+        opts.add(selectedVal!);
+      }
     }
   }
 
