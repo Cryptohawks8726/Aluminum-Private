@@ -136,6 +136,20 @@ class NTInstance {
     NTCoreABI.ntSetDouble(_getEntryHandle(entryName), 0, val);
   }
 
+  void setEntryDoubleArray(String entryName, List<double> val) {
+    // Requires allocating a native array
+    final ptr = calloc.allocate<Double>(sizeOf<Double>() * val.length);
+    for (var i = 0; i < val.length; i++) {
+      ptr[i] = val[i];
+    }
+    NTCoreABI.ntSetDoubleArray(_getEntryHandle(entryName), 0, ptr, val.length);
+    calloc.free(ptr);
+  }
+
+  void setEntryString(String entryName, String val) {
+    NTCoreABI.ntSetString(_getEntryHandle(entryName), 0, toWpiString(val));
+  }
+
   int _getEntryHandle(String entryName) {
     var maybeCached = handlesInUse[entryName];
     if (maybeCached != null) {
