@@ -17,14 +17,14 @@ import 'dart:math' as math;
 const double fieldLengthMeters = 16.54;
 const double fieldWidthMeters = 8.21;
 // Path to the field image file.
-const String fieldImagePath = "images/2025-field.png";
+const String fieldImagePath = "images/2026-field.png";
 // Position of the origin and size of the field, in pixels
-const double fieldOriginX = 537, fieldOriginY = 1702;
+const double fieldOriginX = 255, fieldOriginY = 1920;
 const double fieldSizeX = 2938, fieldSizeY = 1469;
 
 // Calculated values from the constants to save time later.
 // Manually inputed field size (4000x1927)
-const Size fieldImageSize = Size(4000, 1927);
+const Size fieldImageSize = Size(4196, 2035);
 
 // Same as the other constants just divided by image size
 final double fieldOriginRatioX = fieldOriginX / fieldImageSize.width;
