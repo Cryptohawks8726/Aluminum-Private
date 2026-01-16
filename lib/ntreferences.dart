@@ -1,5 +1,6 @@
 import 'package:aluminum/ntcore/instance.dart';
 import 'package:aluminum/util.dart';
+import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 
 /*
@@ -7,6 +8,7 @@ update port number and server name for irl testing
 localhost:5810 can be used for testing w/ robot sim
 */
 final NTInstance inst = kDebugMode
+    // Connects to localhost in debug mode by default, and in release builds connects to the team by default
     ? (NTInstance()..updateServerNamePort("localhost", 5810))
     : NTInstance();
 
@@ -39,6 +41,15 @@ final matchNumberNotifier = NTValueNotifier.fromName(
 );
 final isRedAllianceNotifier = NTValueNotifier.fromName(
   valueName: '/FMSInfo/IsRedAlliance',
+  inst: inst,
+);
+final autoChooserSelectedPath = '/SmartDashboard/autoChooser/active';
+final autoChooserOptionsNotifier = NTValueNotifier.fromName(
+  valueName: '/SmartDashboard/autoChooser/options',
+  inst: inst,
+);
+final autoChooserSelectedNotifier = NTValueNotifier.fromName(
+  valueName: autoChooserSelectedPath,
   inst: inst,
 );
 

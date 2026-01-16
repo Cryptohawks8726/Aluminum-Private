@@ -72,6 +72,7 @@ class NTInstance {
         return;
       }
       var nameDart = wpiToDartString(name);
+      // print('Received event for $nameDart');
       calloc.free(name);
       // don't think freeCharArray is needed here? maybe double check that later
       NTValueNotifier? maybeNotifier =
@@ -134,26 +135,6 @@ class NTInstance {
   void setEntryDouble(String entryName, double val) {
     NTCoreABI.ntSetDouble(_getEntryHandle(entryName), 0, val);
   }
-
-  // --- ADDED THIS METHOD TO SUPPORT WAYPOINTS ---
-  void setEntryDoubleArray(String entryName, List<double> val) {
-    // Requires allocating a native array
-    final ptr = calloc<Double>(val.length);
-    for (var i = 0; i < val.length; i++) {
-      ptr[i] = val[i];
-    }
-    try {
-      NTCoreABI.ntSetDoubleArray(
-        _getEntryHandle(entryName),
-        0,
-        ptr,
-        val.length,
-      );
-    } finally {
-      calloc.free(ptr);
-    }
-  }
-  // ----------------------------------------------
 
   int _getEntryHandle(String entryName) {
     var maybeCached = handlesInUse[entryName];
@@ -279,11 +260,16 @@ NetworkTablesValue _cValueToDart(NTValue value) {
       out = NTIntegerValue(value.lastChange, value.serverTime, value.data.vInt);
       break;
     case ntTypeString:
-      out = NTStringValue(
-        value.lastChange,
-        value.serverTime,
-        value.data.vString.str.toDartString(length: value.data.vString.len),
-      );
+      // Apparently this can return nullptr
+      if (value.data.vString.str.address != 0) {
+        out = NTStringValue(
+          value.lastChange,
+          value.serverTime,
+          value.data.vString.str.toDartString(length: value.data.vString.len),
+        );
+      } else {
+        out = NTStringValue(value.lastChange, value.serverTime, "");
+      }
       break;
     case ntTypeRaw:
       var rawArr = value.data.vRaw.data.asTypedList(value.data.vRaw.size);
