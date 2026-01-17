@@ -186,10 +186,20 @@ class _FieldViewWidgetState extends State<FieldViewWidget> {
                   'Field View',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                // Removed Delete Button
                 Text(
                   'X: ${robotPosition[0].toStringAsFixed(2)}m  Y: ${robotPosition[1].toStringAsFixed(2)}m',
                   style: const TextStyle(color: Colors.white, fontSize: 12),
+                ),
+                FilledButton(
+                  onPressed: () {
+                    inst.setEntryBool(setZeroGyroPath, true);
+                  },
+                  child: Text(
+                    'Reset Gyro',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelSmall?.copyWith(color: Colors.black),
+                  ),
                 ),
               ],
             ),
