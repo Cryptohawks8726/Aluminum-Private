@@ -2,6 +2,7 @@ import 'package:aluminum/ntcore/values.dart';
 import 'package:aluminum/ntreferences.dart';
 import 'package:aluminum/screens/dash_2cam_default.dart';
 import 'package:aluminum/screens/debug_screen.dart';
+import 'package:aluminum/screens/motor_testing.dart';
 import 'package:aluminum/screens/settings_screen.dart';
 import 'package:aluminum/settings.dart';
 import 'package:aluminum/util.dart';
@@ -40,6 +41,11 @@ const pageList = <PageDestination>[
     name: 'Debug Panel',
     icon: Icon(Icons.construction),
     page: DebugScreen(),
+  ),
+  PageDestination(
+    name: 'Test Motors',
+    icon: Icon(Icons.construction),
+    page: MotorTestingScreen(),
   ),
   PageDestination(
     name: 'Settings',
