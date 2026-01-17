@@ -42,6 +42,7 @@ dependencies:
   image_size_getter: ^2.4.1
   window_manager: ^0.5.1
   app_dirs: ^0.2.0
+  ffigen: ^20.1.1
 
 dev_dependencies:
   flutter_test:

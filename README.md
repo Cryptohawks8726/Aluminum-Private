@@ -1,4 +1,5 @@
 <img src="images/logo.png" style="width:30%; height:auto;"></img>
+
 # 8726 DriverDashboard
 
 Dashboard for 8726 drivers. Can communicate with the robot to send and receive info.
@@ -11,6 +12,25 @@ A checkout of allwpilib is also in the repo as a submodule - this should be upda
 This is used to build ntcore from source, the WPILib library which can run a NetworkTables client.
 The FFI bindings used can be found in lib/ntcore and you can find the C api's documentation
 [here](https://github.wpilib.org/allwpilib/docs/release/cpp/ntcore__c_8h.html).
+
+## NTCore Bindings & Running FFIGen
+
+This project uses dart FFI bindings to interface with the NTCore library, part of WPILib. This library has a C API
+which can easily be called from other languages, like dart. Dart bindings were automatically generated using the ffigen
+package, creating lib/ntcore/ntcore.g.dart. The main app code shouldn't directly use these bindings - instead,
+go through the classes provided in lib/ntcore/instance.dart, which have all been documented and have methods which can
+safely and easily be called from dart without interacting with native memory. You can easily add extra methods to NTInstance
+or create another class if you need to access other parts of the C library which do not currently have safe dart bindings written
+for them.
+
+In order to regenerate the bindings, run tool/ffigen.dart (`dart run tool/ffigen.dart`). You may need to provide the location
+of the C standard library headers, which it for some reason can't find sometimes, so locate wherever those headers are on your
+system and set your CPATH environment variable to that or temporarily add it to the compiler arguments in tool/ffigen.dart.
+
+You may need to update the bindings if WPILib changes or adds to the NTCore C API. To do this, download the headers (the easiest
+place to get them is [wpilib's maven releases](https://frcmaven.wpi.edu/ui/native/release). Go to the ntcoreffi releases, where there
+is a .zip file containing all the headers. Unzip all the NTCore headers into ntcore_headers/include, replacing the old files. Then,
+follow the above instructions to regenerate the bindings, and make sure there are no new errors and implement any new functionality.
 
 ## Building and Running
 

@@ -2,21 +2,54 @@
 import 'dart:async';
 import 'dart:ffi';
 
-import 'package:aluminum/ntcore/abi.dart';
-import 'package:aluminum/ntcore/ntcore_structs.dart';
+import 'package:aluminum/ntcore/library_link.dart';
+import 'package:aluminum/ntcore/ntcore.g.dart';
 import 'package:aluminum/ntcore/values.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
+
+// These two enums are copied by hand, since invalid types caused ffigen enums
+// to crash in one spot.
+// enum NT_Type
+const ntTypeUnassigned = 0;
+const ntTypeBoolean = 0x01;
+const ntTypeDouble = 0x02;
+const ntTypeString = 0x04;
+const ntTypeRaw = 0x08;
+const ntTypeBooleanArray = 0x10;
+const ntTypeDoubleArray = 0x20;
+const ntTypeStringArray = 0x40;
+const ntTypeRPC = 0x80;
+const ntTypeInteger = 0x100;
+const ntTypeFloat = 0x200;
+const ntTypeIntegerArray = 0x400;
+const ntTypeFloatArray = 0x800;
+
+// enum NT_EventFlags
+const ntEventNone = 0;
+const ntEventImmediate = 0x01;
+const ntEventConnected = 0x02;
+const ntEventDisconnected = 0x04;
+const ntEventConnection = ntEventConnected | ntEventDisconnected;
+const ntEventPublish = 0x08;
+const ntEventUnpublish = 0x10;
+const ntEventProperties = 0x20;
+const ntEventTopic = ntEventPublish | ntEventUnpublish | ntEventProperties;
+const ntEventValueRemote = 0x40;
+const ntEventValueLocal = 0x80;
+const ntEventValueAll = ntEventValueRemote | ntEventValueLocal;
+const ntEventLogMessage = 0x100;
+const ntEventTimeSync = 0x200;
 
 /// A NetworkTables client. Uses the ntcore library from WPILib.
 /// You should only need one instance object at any given time.
 /// See the WPILib C++ docs on ntcore's C api (ntcore_c.h) for
 /// more info.
 class NTInstance {
-  final int _inst = NTCoreABI.ntCreateInstance();
+  final int _inst = ntcore.NT_CreateInstance();
   // if polling gets bad enough we can move it to an isolate but that seems unnecessary.
-  late final _listenerPoller = NTCoreABI.ntCreateListenerPoller(_inst);
-  late final Pointer<WPIString> _connectionName;
+  late final _listenerPoller = ntcore.NT_CreateListenerPoller(_inst);
+  late final Pointer<WPI_String> _connectionName;
 
   /// Cache of used handles. They can be forcibly freed but you likely won't need to.
   final Map<String, int> handlesInUse = {};
@@ -36,8 +69,8 @@ class NTInstance {
     name = "8726DriverDashboard",
   }) {
     _connectionName = toWpiString(name);
-    NTCoreABI.ntStartClient4(_inst, _connectionName);
-    NTCoreABI.ntSetServerTeam(_inst, teamNumber, port);
+    ntcore.NT_StartClient4(_inst, _connectionName);
+    ntcore.NT_SetServerTeam(_inst, teamNumber, port);
     // starts polling listeners (at 20 ms intervals)
     Timer.periodic(const Duration(milliseconds: 20), _pollListeners);
   }
@@ -50,10 +83,10 @@ class NTInstance {
     }
 
     // Update connection info too since it's convenient to do here.
-    connectionNotifier.isConnected = NTCoreABI.ntIsConnected(_inst) == 1;
+    connectionNotifier.isConnected = ntcore.NT_IsConnected(_inst) == 1;
 
     var len = calloc.allocate<Size>(sizeOf<Size>());
-    var queue = NTCoreABI.ntReadListenerQueue(_listenerPoller, len);
+    var queue = ntcore.NT_ReadListenerQueue(_listenerPoller, len);
 
     if (queue.address == 0) {
       return; // The function returns a null pointer when there are no events.
@@ -64,8 +97,8 @@ class NTInstance {
       // we usually subscribe to. CHANGE THIS IF YOU WANT TO LISTEN TO OTHER EVENTS!
 
       var event = queue[i];
-      var name = calloc.allocate<WPIString>(sizeOf<WPIString>());
-      NTCoreABI.ntGetTopicName(event.data.valueData.topic, name);
+      var name = calloc.allocate<WPI_String>(sizeOf<WPI_String>());
+      ntcore.NT_GetTopicName(event.data.valueData.topic, name);
       // just in case this is null
       if (name.ref.str.address == 0) {
         calloc.free(name);
@@ -82,7 +115,7 @@ class NTInstance {
       }
     }
 
-    NTCoreABI.ntDisposeEventArray(queue, len.value);
+    ntcore.NT_DisposeEventArray(queue, len.value);
   }
 
   /// Frees resources in use by this instance. Failing to call this before
@@ -90,8 +123,8 @@ class NTInstance {
   /// object you won't need to call this.)
   void dispose() {
     stopTimer = true;
-    NTCoreABI.ntDestroyListenerPoller(_listenerPoller);
-    NTCoreABI.ntDestroyInstance(_inst);
+    ntcore.NT_DestroyListenerPoller(_listenerPoller);
+    ntcore.NT_DestroyInstance(_inst);
     calloc.free(_connectionName);
   }
 
@@ -100,7 +133,7 @@ class NTInstance {
   /// so only call this if the connection settings need to be changed.
   void updateConnectionSettings(int team, int port) {
     if (port > 0) {
-      NTCoreABI.ntSetServerTeam(_inst, team, port);
+      ntcore.NT_SetServerTeam(_inst, team, port);
     }
   }
 
@@ -110,18 +143,18 @@ class NTInstance {
   /// the sim GUI. Otherwise this works the same as updateConnectionSettings
   void updateServerNamePort(String serverName, int port) {
     if (port > 0) {
-      NTCoreABI.ntSetServer(_inst, toWpiString(serverName), port);
+      ntcore.NT_SetServer(_inst, toWpiString(serverName), port);
     }
   }
 
   /// Fetches the value of an entry.
   NetworkTablesValue getEntryValue(String entryName) {
     var entryHandle = _getEntryHandle(entryName);
-    var value = calloc.allocate<NTValue>(sizeOf<NTValue>());
-    NTCoreABI.ntGetEntryValue(entryHandle, value);
-    NTCoreABI.ntReleaseEntry(entryHandle);
+    var value = calloc.allocate<NT_Value>(sizeOf<NT_Value>());
+    ntcore.NT_GetEntryValue(entryHandle, value);
+    ntcore.NT_ReleaseEntry(entryHandle);
     var out = _cValueToDart(value.ref);
-    NTCoreABI.ntDisposeValue(value);
+    ntcore.NT_DisposeValue(value);
     calloc.free(value);
     return out;
   }
@@ -129,11 +162,11 @@ class NTInstance {
   // TODO: write all the other ones, and test these.
   /// Sets a boolean value in NetworkTables.
   void setEntryBool(String entryName, bool val) {
-    NTCoreABI.ntSetBoolean(_getEntryHandle(entryName), 0, val ? 1 : 0);
+    ntcore.NT_SetBoolean(_getEntryHandle(entryName), 0, val ? 1 : 0);
   }
 
   void setEntryDouble(String entryName, double val) {
-    NTCoreABI.ntSetDouble(_getEntryHandle(entryName), 0, val);
+    ntcore.NT_SetDouble(_getEntryHandle(entryName), 0, val);
   }
 
   void setEntryDoubleArray(String entryName, List<double> val) {
@@ -142,12 +175,12 @@ class NTInstance {
     for (var i = 0; i < val.length; i++) {
       ptr[i] = val[i];
     }
-    NTCoreABI.ntSetDoubleArray(_getEntryHandle(entryName), 0, ptr, val.length);
+    ntcore.NT_SetDoubleArray(_getEntryHandle(entryName), 0, ptr, val.length);
     calloc.free(ptr);
   }
 
   void setEntryString(String entryName, String val) {
-    NTCoreABI.ntSetString(_getEntryHandle(entryName), 0, toWpiString(val));
+    ntcore.NT_SetString(_getEntryHandle(entryName), 0, toWpiString(val));
   }
 
   int _getEntryHandle(String entryName) {
@@ -155,7 +188,7 @@ class NTInstance {
     if (maybeCached != null) {
       return maybeCached;
     } else {
-      var newHandle = NTCoreABI.ntGetEntry(_inst, toWpiString(entryName));
+      var newHandle = ntcore.NT_GetEntry(_inst, toWpiString(entryName));
       handlesInUse[entryName] = newHandle;
       return newHandle;
     }
@@ -167,7 +200,7 @@ class NTInstance {
   void freeEntryHandle(String entryName) {
     var maybeCached = handlesInUse[entryName];
     if (maybeCached != null) {
-      NTCoreABI.ntReleaseEntry(maybeCached);
+      ntcore.NT_ReleaseEntry(maybeCached);
     }
   }
 }
@@ -201,7 +234,7 @@ class NTValueNotifier with ChangeNotifier {
   static void stopNotifying(String valueName) {
     var listener = _activeListeners[valueName];
     if (listener != null) {
-      NTCoreABI.ntRemoveListener(listener.listenerHandle);
+      ntcore.NT_RemoveListener(listener.listenerHandle);
       _activeListeners.remove(valueName);
     }
   }
@@ -215,8 +248,8 @@ class NTValueNotifier with ChangeNotifier {
       return maybeCached;
     }
 
-    var handle = NTCoreABI.ntGetEntry(inst._inst, toWpiString(valueName));
-    var listenerHandle = NTCoreABI.ntAddPolledListener(
+    var handle = ntcore.NT_GetEntry(inst._inst, toWpiString(valueName));
+    var listenerHandle = ntcore.NT_AddPolledListener(
       inst._listenerPoller,
       handle,
       ntEventValueAll,
@@ -240,100 +273,108 @@ class NTValueNotifier with ChangeNotifier {
 // this method is messy but mostly copied + pasted a lot.
 // you can use all the funtcions to get data out of a value but it's
 // literally just more effort for no reason.
-/// Converts an NTValue struct into a NetworkTablesValue object.
+/// Converts an NT_Value struct into a NetworkTablesValue object.
 /// This copies data from the NT_Value struct. You should ensure
 /// any memory from the struct is freed after calling this function.
-NetworkTablesValue _cValueToDart(NTValue value) {
+NetworkTablesValue _cValueToDart(NT_Value value) {
   NetworkTablesValue out;
 
   // note: Pointer<Utf8>.toDartString() does NOT rely on existing memory
   // but the arrays do, so they must be copied.
-  switch (value.type) {
+  switch (value.typeAsInt) {
     case ntTypeBoolean:
       out = NTBooleanValue(
-        value.lastChange,
-        value.serverTime,
-        value.data.vBoolean == 1,
+        value.last_change,
+        value.server_time,
+        value.data.v_boolean == 1,
       );
       break;
     case ntTypeDouble:
       out = NTDoubleValue(
-        value.lastChange,
-        value.serverTime,
-        value.data.vDouble,
+        value.last_change,
+        value.server_time,
+        value.data.v_double,
       );
       break;
     case ntTypeFloat:
       out = NTDoubleValue(
-        value.lastChange,
-        value.serverTime,
-        value.data.vFloat,
+        value.last_change,
+        value.server_time,
+        value.data.v_float,
       );
       break;
     case ntTypeInteger:
-      out = NTIntegerValue(value.lastChange, value.serverTime, value.data.vInt);
+      out = NTIntegerValue(
+        value.last_change,
+        value.server_time,
+        value.data.v_int,
+      );
       break;
     case ntTypeString:
       // Apparently this can return nullptr
-      if (value.data.vString.str.address != 0) {
+      if (value.data.v_string.str.address != 0) {
         out = NTStringValue(
-          value.lastChange,
-          value.serverTime,
-          value.data.vString.str.toDartString(length: value.data.vString.len),
+          value.last_change,
+          value.server_time,
+          value.data.v_string.str.cast<Utf8>().toDartString(
+            length: value.data.v_string.len,
+          ),
         );
       } else {
-        out = NTStringValue(value.lastChange, value.serverTime, "");
+        out = NTStringValue(value.last_change, value.server_time, "");
       }
       break;
     case ntTypeRaw:
-      var rawArr = value.data.vRaw.data.asTypedList(value.data.vRaw.size);
-      out = NTRawValue(value.lastChange, value.serverTime, List.from(rawArr));
+      var rawArr = value.data.v_raw.data.asTypedList(value.data.v_raw.size);
+      out = NTRawValue(value.last_change, value.server_time, List.from(rawArr));
       break;
     case ntTypeBooleanArray:
-      var arrPtr = value.data.arrBoolean.arr;
+      var arrPtr = value.data.arr_boolean.arr;
       var newArr = <bool>[];
-      for (int i = 0; i < value.data.arrBoolean.size; i++) {
+      for (int i = 0; i < value.data.arr_boolean.size; i++) {
         newArr.add(arrPtr[i] == 1);
       }
-      out = NTBooleanArrayValue(value.lastChange, value.serverTime, newArr);
+      out = NTBooleanArrayValue(value.last_change, value.server_time, newArr);
       break;
     case ntTypeIntegerArray:
-      var arr = value.data.arrInt.arr.asTypedList(value.data.arrInt.size);
+      var arr = value.data.arr_int.arr.asTypedList(value.data.arr_int.size);
       out = NTIntegerArrayValue(
-        value.lastChange,
-        value.serverTime,
+        value.last_change,
+        value.server_time,
         List.from(arr),
       );
       break;
     case ntTypeFloatArray:
-      var arr = value.data.arrFloat.arr.asTypedList(value.data.arrFloat.size);
+      var arr = value.data.arr_float.arr.asTypedList(value.data.arr_float.size);
       out = NTDoubleArrayValue(
-        value.lastChange,
-        value.serverTime,
+        value.last_change,
+        value.server_time,
         List.from(arr),
       );
       break;
     case ntTypeDoubleArray:
-      var arr = value.data.arrDouble.arr.asTypedList(value.data.arrDouble.size);
+      var arr = value.data.arr_double.arr.asTypedList(
+        value.data.arr_double.size,
+      );
       out = NTDoubleArrayValue(
-        value.lastChange,
-        value.serverTime,
+        value.last_change,
+        value.server_time,
         List.from(arr),
       );
       break;
     case ntTypeStringArray:
-      var stringArr = value.data.arrString.arr;
+      var stringArr = value.data.arr_string.arr;
       var newList = <String>[];
-      for (int i = 0; i < value.data.arrString.size; i++) {
+      for (int i = 0; i < value.data.arr_string.size; i++) {
         var wpi = stringArr[i];
-        newList.add(wpi.str.toDartString(length: wpi.len));
+        newList.add(wpi.str.cast<Utf8>().toDartString(length: wpi.len));
       }
-      out = NTStringArrayValue(value.lastChange, value.serverTime, newList);
+      out = NTStringArrayValue(value.last_change, value.server_time, newList);
       break;
 
     // Will return an unassigned value if it's either an unassigned value or broken.
     default:
-      out = NTUnassignedValue(value.lastChange, value.serverTime);
+      out = NTUnassignedValue(value.last_change, value.server_time);
       break;
   }
 
