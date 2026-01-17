@@ -1,13 +1,8 @@
-import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
+import 'package:aluminum/ntcore/values.dart';
+import 'package:aluminum/ntreferences.dart';
 import 'package:flutter/material.dart';
-
-// Your local imports
-import '../ntreferences.dart'; // Provides 'inst', 'waypointsEntry', 'waypointsPath'
-import '../ntcore/values.dart'; // Provides 'NTDoubleArrayValue'
 
 // --- CONSTANTS ---
 const double fieldLengthMeters = 16.54;
@@ -41,6 +36,8 @@ class _FieldViewWidgetState extends State<FieldViewWidget> {
     super.initState();
     robotPosNotifier.addListener(_updateRobotPosition);
     waypointsEntry.addListener(_updateWaypointsFromNT);
+    _updateWaypointsFromNT();
+    _updateRobotPosition();
   }
 
   @override
@@ -265,7 +262,7 @@ class FieldPainter extends CustomPainter {
       ..color = Colors.orangeAccent
       ..style = PaintingStyle.fill;
     final pathPaint = Paint()
-      ..color = Colors.cyan.withOpacity(0.5)
+      ..color = Colors.cyan.withValues(alpha: 0.0)
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
 

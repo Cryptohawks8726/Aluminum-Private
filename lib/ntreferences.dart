@@ -1,6 +1,4 @@
 import 'package:aluminum/ntcore/instance.dart';
-import 'package:aluminum/util.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 
 /*
@@ -14,7 +12,7 @@ final NTInstance inst = kDebugMode
 
 // --- CONSTANTS ---
 // Define the path here so we can use it in field_view.dart too
-const String waypointsPath = '/SmartDashboard/setpoints';
+const String waypointsPath = '/SmartDashboard/FieldPointDisplay/setpoints';
 
 final NTValueNotifier gameTimeNotifier = NTValueNotifier.fromName(
   valueName: "/SmartDashboard/gameTime",

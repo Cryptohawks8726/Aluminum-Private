@@ -2,8 +2,6 @@
 // but dart at least has sealed classes so its a little better?
 // Doubles and floats have been combined since dart does not have a native 'float' type anyway.
 
-import 'dart:ffi';
-
 /// A class representing a value in NetworkTables, of one of various specific types.
 /// This is a sealed class so you can use a switch case to identify the value type.
 /// You can also use .toString to get a text representation of the value, whatever type it is.

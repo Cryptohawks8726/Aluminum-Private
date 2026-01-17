@@ -1,4 +1,3 @@
-import 'package:aluminum/ntcore/instance.dart';
 import 'package:aluminum/ntreferences.dart';
 import 'package:aluminum/util.dart';
 import 'package:flutter/material.dart';
