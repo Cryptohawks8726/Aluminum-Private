@@ -23,11 +23,10 @@ class _DebugScreenState extends State<DebugScreen> {
               spacing: 20,
               children: [
                 Expanded(
-                  child: 
-                  PIDContainer(
-                    subsystemName: "ExampleSubsystem", 
+                  child: PIDContainer(
+                    subsystemName: "ExampleSubsystem",
                     title: "Subsystem!!!!!",
-                  )
+                  ),
                 ),
                 Expanded(
                   child: PIDContainer(

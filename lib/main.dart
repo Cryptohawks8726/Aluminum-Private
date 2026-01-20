@@ -4,6 +4,7 @@ import 'package:aluminum/screens/dash_2cam_default.dart';
 import 'package:aluminum/screens/debug_screen.dart';
 import 'package:aluminum/screens/motor_testing.dart';
 import 'package:aluminum/screens/settings_screen.dart';
+import 'package:aluminum/screens/soundboard.dart';
 import 'package:aluminum/settings.dart';
 import 'package:aluminum/util.dart';
 import 'package:aluminum/widgets/auto_chooser.dart';
@@ -46,6 +47,11 @@ const pageList = <PageDestination>[
     name: 'Test Motors',
     icon: Icon(Icons.sports_esports),
     page: MotorTestingScreen(),
+  ),
+  PageDestination(
+    name: 'Soundboard',
+    icon: Icon(Icons.audio_file),
+    page: SoundboardScreen(),
   ),
   PageDestination(
     name: 'Settings',
