@@ -32,7 +32,7 @@ class PageDestination {
 }
 
 // More convenient place to edit all the pages in the app.
-const pageList = <PageDestination>[
+final pageList = <PageDestination>[
   PageDestination(
     name: 'Dashboard',
     icon: Icon(Icons.dashboard),

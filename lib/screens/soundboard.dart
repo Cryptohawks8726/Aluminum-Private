@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
+
+// ADD SOUNDS HERE
+const sounds = <({String assetPath, String name})>[
+  (assetPath: 'sounds/test-sound.mp3', name: 'Test Sound'),
+];
 
 class SoundboardScreen extends StatelessWidget {
-  const SoundboardScreen({super.key});
+  final players = sounds
+      .map((data) {
+        return AudioPlayer()..setAsset(data.assetPath);
+      })
+      .toList(growable: false);
+
+  SoundboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +34,25 @@ class SoundboardScreen extends StatelessWidget {
           Expanded(
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
+                crossAxisCount: 6,
               ),
               itemBuilder: (ctx, index) {
-                return Text('hi');
+                return Padding(
+                  padding: EdgeInsetsGeometry.all(10.0),
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      players[index].play();
+                    },
+                    child: Text(sounds[index].name),
+                  ),
+                );
               },
-              itemCount: 5,
+              itemCount: sounds.length,
             ),
           ),
         ],
