@@ -9,9 +9,11 @@ import 'package:aluminum/settings.dart';
 import 'package:aluminum/util.dart';
 import 'package:aluminum/widgets/auto_chooser.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
+  JustAudioMediaKit.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
   windowManager.setTitle('Aluminum');
