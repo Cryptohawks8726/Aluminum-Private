@@ -107,14 +107,5 @@ install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
   CONFIGURATIONS Profile;Release
   COMPONENT Runtime)
 
-# Compile/use WPILib ntcore
-if (DEFINED ENV{COMPILE_NTCORE})
-    set(WITH_CSCORE OFF CACHE BOOL "enable cscore" FORCE)
-    set(WITH_GUI OFF CACHE BOOL "enable GUI" FORCE)
-    set(WITH_SIMULATION_MODULES OFF CACHE BOOL "enable sim modules" FORCE)
-    set(WITH_TESTS OFF CACHE BOOL "enable tests" FORCE)
-    set(WITH_WPILIB OFF CACHE BOOL "enable WPILib" FORCE)
-    add_subdirectory("../allwpilib" "../build/ntcore")
-else()
-    install(FILES "../ntcoreffi.dll" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}")
-endif()
+# ADDED: install ntcore.
+install(FILES "../ntcoreffi.dll" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}")
