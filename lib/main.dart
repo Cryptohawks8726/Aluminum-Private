@@ -1,3 +1,5 @@
+import 'dart:ui' show Size;
+
 import 'package:aluminum/ntcore/values.dart';
 import 'package:aluminum/ntreferences.dart';
 import 'package:aluminum/screens/dash_2cam_default.dart';
@@ -8,16 +10,20 @@ import 'package:aluminum/screens/soundboard.dart';
 import 'package:aluminum/settings.dart';
 import 'package:aluminum/util.dart';
 import 'package:aluminum/widgets/auto_chooser.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Size;
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:window_manager/window_manager.dart';
+
+bool appIsExpanded = false;
 
 void main() async {
   JustAudioMediaKit.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
+  // await windowManager.setFullScreen(true);
   windowManager.setTitle('Aluminum');
   Settings.tryLoadUserSettings();
+
   runApp(const DriverDashboard());
 }
 
@@ -95,14 +101,37 @@ class _DriverDashboardState extends State<DriverDashboard> {
             ),
 
             // drawer button (has since been moved to dashbaord)
-            floatingActionButton: FloatingActionButton.small(
-              onPressed: () {
-                scaffoldKey.currentState?.openEndDrawer();
-              },
-              child: Padding(
-                padding: EdgeInsetsGeometry.all(4.0),
-                child: Image.asset("images/logo.png"),
-              ),
+            floatingActionButton: Column(
+              mainAxisSize: .min,
+              spacing: 5.0,
+              children: [
+                FloatingActionButton.small(
+                  onPressed: () async {
+                    if (appIsExpanded) {
+                      windowManager.setTitleBarStyle(TitleBarStyle.normal);
+                    } else {
+                      await windowManager.setTitleBarStyle(
+                        TitleBarStyle.hidden,
+                      );
+                      await windowManager.maximize(vertically: false);
+                      Size size = await windowManager.getSize();
+                      size = Size(size.width, 750);
+                      await windowManager.setSize(size);
+                    }
+                    appIsExpanded = !appIsExpanded;
+                  },
+                  child: Icon(Icons.expand),
+                ),
+                FloatingActionButton.small(
+                  onPressed: () {
+                    scaffoldKey.currentState?.openEndDrawer();
+                  },
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.all(4.0),
+                    child: Image.asset("images/logo.png"),
+                  ),
+                ),
+              ],
             ),
 
             // drawer
