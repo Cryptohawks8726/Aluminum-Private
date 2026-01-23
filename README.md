@@ -60,6 +60,9 @@ The fastest way to downloaded NSIS is using winget: `winget install NSIS.NSIS`.
 Then, run the installed NSIS app and select "Compile NSI scripts", then open
 the setup.nsi file in this repository. An installer will be produced in the build directory.
 
+Please remember to update the version number when publishing new releases - 
+all you need to do is change the number at the top of pubspec.yaml!
+
 ## Getting Started
 
 TODO
