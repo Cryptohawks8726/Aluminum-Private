@@ -112,13 +112,14 @@ class _MotorTestingScreenState extends State<MotorTestingScreen> {
           }
         }
 
-        for (var i in motors.keys) {
+        // Remove any motors which are no longer used
+        var keysDupe = motors.keys.toList(growable: false);
+        for (var i in keysDupe) {
           if (!val.value.contains(i)) {
             motors[i]?.dispose();
             motors.remove(i);
           }
         }
-        // Remove any motors which are no longer used
       });
     }
   }
