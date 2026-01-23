@@ -49,15 +49,16 @@ On macos, you'll need to install the [cocoapods](https://cocoapods.org/) package
 
 Other than that this is a normal flutter project and can run/hot reload/add packages as usual. Note that the dashboard will most likely be ran on windows; the linux and macos versions are mainly for development purposes.
 
-## Builder installers
-Building installers and publishing them to GitHub releases is an easy way
-to get the app onto different laptops and will create start menu shortcuts automatically.  
+## Building installers
 
+Building installers and publishing them to GitHub releases is an easy way
+to get the app onto different laptops and will create start menu shortcuts automatically.
+
+First, build the project normally (`flutter build windows --release`).
 Installers are built using NSIS and the setup.nsi script in the repository root.
 The fastest way to downloaded NSIS is using winget: `winget install NSIS.NSIS`.
 Then, run the installed NSIS app and select "Compile NSI scripts", then open
 the setup.nsi file in this repository. An installer will be produced in the build directory.
-
 
 ## Getting Started
 
