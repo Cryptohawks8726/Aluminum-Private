@@ -10,11 +10,14 @@ import 'package:aluminum/screens/soundboard.dart';
 import 'package:aluminum/settings.dart';
 import 'package:aluminum/util.dart';
 import 'package:aluminum/widgets/auto_chooser.dart';
+import 'package:ffigen/ffigen.dart';
 import 'package:flutter/material.dart' hide Size;
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:window_manager/window_manager.dart';
 
 bool appIsExpanded = false;
+String versionString = '';
 
 void main() async {
   JustAudioMediaKit.ensureInitialized();
@@ -23,6 +26,10 @@ void main() async {
   // await windowManager.setFullScreen(true);
   windowManager.setTitle('Aluminum');
   Settings.tryLoadUserSettings();
+
+  // Get version string (slapped here since it was convenient)
+  final pkgInfo = await PackageInfo.fromPlatform();
+  versionString = pkgInfo.version;
 
   runApp(const DriverDashboard());
 }
@@ -142,7 +149,14 @@ class _DriverDashboardState extends State<DriverDashboard> {
                   horizontal: 12.0,
                   vertical: 12.0,
                 ),
-                child: AutoChooser(),
+                child: Column(
+                  mainAxisSize: .min,
+                  children: [
+                    AutoChooser(),
+                    const Divider(),
+                    Text('Aluminum Version: $versionString'),
+                  ],
+                ),
               ),
 
               onDestinationSelected: (int idx) {
