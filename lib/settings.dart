@@ -108,12 +108,10 @@ class Settings {
       if (maybeSettings != null) {
         overwriteSettings(maybeSettings);
       } else {
-        print('bad decode');
         return false;
       }
       return true;
     } catch (_) {
-      print('bad file');
       return false;
     }
   }

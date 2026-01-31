@@ -2,7 +2,7 @@ import 'dart:ui' show Size;
 
 import 'package:aluminum/ntcore/values.dart';
 import 'package:aluminum/ntreferences.dart';
-import 'package:aluminum/screens/dash_2cam_default.dart';
+import 'package:aluminum/screens/main_dashboard.dart';
 import 'package:aluminum/screens/debug_screen.dart';
 import 'package:aluminum/screens/motor_testing.dart';
 import 'package:aluminum/screens/settings_screen.dart';
@@ -10,7 +10,6 @@ import 'package:aluminum/screens/soundboard.dart';
 import 'package:aluminum/settings.dart';
 import 'package:aluminum/util.dart';
 import 'package:aluminum/widgets/auto_chooser.dart';
-import 'package:ffigen/ffigen.dart';
 import 'package:flutter/material.dart' hide Size;
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -51,7 +50,7 @@ final pageList = <PageDestination>[
   PageDestination(
     name: 'Dashboard',
     icon: Icon(Icons.dashboard),
-    page: Default2CamDashboard(),
+    page: MainDashboard(),
   ),
   PageDestination(
     name: 'Debug Panel',

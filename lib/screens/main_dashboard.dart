@@ -9,14 +9,14 @@ import 'package:aluminum/util.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-class Default2CamDashboard extends StatefulWidget {
-  const Default2CamDashboard({super.key});
+class MainDashboard extends StatefulWidget {
+  const MainDashboard({super.key});
 
   @override
-  State<Default2CamDashboard> createState() => _Default2CamDashboardState();
+  State<MainDashboard> createState() => _MainDashboardState();
 }
 
-class _Default2CamDashboardState extends State<Default2CamDashboard> {
+class _MainDashboardState extends State<MainDashboard> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);

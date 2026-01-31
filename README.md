@@ -63,6 +63,6 @@ the setup.nsi file in this repository. An installer will be produced in the buil
 Please remember to update the version number when publishing new releases - 
 all you need to do is change the number at the top of pubspec.yaml!
 
-## Getting Started
-
-TODO
+## Maintenance and Adding Features
+- If the NTCore C API ever changes or gets new features, you may need to regenerate the FFI bindings.
+- See HACKING.md at the root of this repo for more info on making code edits.
