@@ -26,6 +26,8 @@ Guide for making code changes to the dashboard.
 - These widgets are passed as a list in the constructor. This is called in lib/screens/main_dashboard.dart. You can search for NTValuesDisplay. The code from the general branch should have good examples.
 ### Displaying custom status lights on the dashboard
 - Status lights are displayed on the right side of the dashboard screen.
+- Right now, they're all set up in lib/screens/main_dashboard.dart. This might get moved out to another widget later if it gets complex enough.
+- For now just add more widgets to the list of children (should be labeled with a comment saying "Status icons" or something like that)
 ### Adding to the soundboard
 - add the desired sound to the sounds/ directory
 - add the name and path to the sound to the list at the top of lib/screens/soundboard.dart
