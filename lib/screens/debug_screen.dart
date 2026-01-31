@@ -21,7 +21,6 @@ class _DebugScreenState extends State<DebugScreen> {
   _DebugScreenState() {
     subsystemPrefix.addListener(() {
       setState(() {});
-      print(subsystemPrefix.entries);
     });
   }
 
@@ -29,6 +28,46 @@ class _DebugScreenState extends State<DebugScreen> {
   void dispose() {
     subsystemPrefix.dispose();
     super.dispose();
+  }
+
+  // moved out to clean things up
+  Widget buildInnerWidget(BuildContext context) {
+    final subMap = subsystemPrefix.entries[selectedSubsystem];
+    if (subMap == null) {
+      return Center(child: Text('-- select a subsystem --'));
+    } else {
+      return Row(
+        spacing: 20,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Column(
+              spacing: 20,
+              children: [
+                Expanded(
+                  child: PIDContainer(
+                    subsystemName: "ExampleSubsystem",
+                    title: "Subsystem!!!!!",
+                  ),
+                ),
+                Expanded(
+                  child: PIDContainer(
+                    subsystemName: "ExampleSubsystem",
+                    title: "Same Subsystem!!!!!",
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          VerticalDivider(),
+          Expanded(flex: 1, child: NTTopicDisplay()),
+          VerticalDivider(),
+          // can be used to display more things in the future
+          Expanded(flex: 3, child: const Placeholder()),
+        ],
+      );
+    }
   }
 
   @override
@@ -57,38 +96,8 @@ class _DebugScreenState extends State<DebugScreen> {
             },
             showSelectedIcon: false,
           ),
-          // Bugged layout rendering, TODO: redo this
-          // Row(
-          //   spacing: 20,
-          //   children: [
-          //     Expanded(
-          //       flex: 2,
-          //       child: Column(
-          //         spacing: 20,
-          //         children: [
-          //           Expanded(
-          //             child: PIDContainer(
-          //               subsystemName: "ExampleSubsystem",
-          //               title: "Subsystem!!!!!",
-          //             ),
-          //           ),
-          //           Expanded(
-          //             child: PIDContainer(
-          //               subsystemName: "ExampleSubsystem",
-          //               title: "Same Subsystem!!!!!",
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-
-          //     VerticalDivider(),
-          //     Expanded(flex: 1, child: NTTopicDisplay()),
-          //     VerticalDivider(),
-          //     // can be used to display more things in the future
-          //     Expanded(flex: 3, child: const Placeholder()),
-          //   ],
-          // ),
+          const Divider(),
+          Expanded(child: buildInnerWidget(context)),
         ],
       ),
     );
