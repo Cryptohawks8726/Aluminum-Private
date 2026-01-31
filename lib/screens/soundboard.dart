@@ -46,7 +46,9 @@ class SoundboardScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      players[index].play();
+                      final player = AudioPlayer()
+                        ..setAsset(sounds[index].assetPath);
+                      player.play();
                     },
                     child: Text(sounds[index].name),
                   ),
