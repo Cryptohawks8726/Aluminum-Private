@@ -5,8 +5,8 @@ import 'package:internet_file/internet_file.dart';
 
 // CHANGE THIS WHEN SWITCHING TO NEW VERSIONS!
 const versionString = '2026.2.1';
-const libName = 'ntcoreffi';
 
+const libName = 'ntcoreffi';
 const baseDlLink =
     'https://frcmaven.wpi.edu/artifactory/release/edu/wpi/first/ntcoreffi/ntcoreffi-cpp/$versionString';
 
@@ -21,7 +21,12 @@ void main(List<String> args) async {
   }
 
   // File which should have the binary.
-  File f = File(Platform.script.resolve("../$fileName").toFilePath());
+  File f;
+  if (Platform.isMacOS) {
+    File f = File(Platform.script.resolve("../macos/Runner/$fileName").toFilePath());
+  } else {
+    File f = File(Platform.script.resolve("../$fileName").toFilePath());
+  }
   // download for current platform if needed.
   if (!f.existsSync()) {
     print(
