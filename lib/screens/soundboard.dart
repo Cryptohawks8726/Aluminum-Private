@@ -5,19 +5,21 @@ typedef SoundItem = ({String assetPath, String name});
 
 const List<SoundItem> sounds = [
   (assetPath: 'sounds/fahhhhhhhhhhhhhh.mp3', name: 'Fahhhh'),
-  (assetPath: 'sounds/lack-of-a-father-figure.mp3', name: 'Lack of a Father Figure'),
+  (
+    assetPath: 'sounds/lack-of-a-father-figure.mp3',
+    name: 'Lack of a Father Figure',
+  ),
   (assetPath: 'sounds/outro-song_oqu8zAg.mp3', name: 'Outro Song'),
   (assetPath: 'sounds/test-sound.mp3', name: 'Test Sound'),
   (assetPath: 'sounds/vine-boom.mp3', name: 'Vine Boom'),
-  (assetPath: 'sounds/we-are-charlie-kirk-song.mp3', name: 'We Are Charlie Kirk'),
+  (
+    assetPath: 'sounds/we-are-charlie-kirk-song.mp3',
+    name: 'We Are Charlie Kirk',
+  ),
 ];
 
 class SoundboardScreen extends StatelessWidget {
   SoundboardScreen({super.key});
-
-  final List<AudioPlayer> players = sounds
-      .map((data) => AudioPlayer()..setAsset(data.assetPath))
-      .toList(growable: false);
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +53,8 @@ class SoundboardScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () async {
-                      final player = AudioPlayer()
-                        ..setAsset(sound.assetPath);
-                      await player.play();
-                      await player.dispose();
+                      final player = AudioPlayer()..setAsset(sound.assetPath);
+                      player.play();
                     },
                     child: Text(sound.name),
                   ),
