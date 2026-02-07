@@ -20,9 +20,6 @@ const List<SoundItem> sounds = [
 
 class SoundboardScreen extends StatefulWidget {
   const SoundboardScreen({super.key});
-
-<<<<<<< HEAD
-=======
   @override
   State<StatefulWidget> createState() => _SoundboardScreenState();
 }
@@ -30,8 +27,6 @@ class SoundboardScreen extends StatefulWidget {
 class _SoundboardScreenState extends State<SoundboardScreen> {
   double vol = 1.0;
   _SoundboardScreenState();
-
->>>>>>> 7393f8b2422cccefa271c9cdae45722fa66b7ca5
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -64,10 +59,8 @@ class _SoundboardScreenState extends State<SoundboardScreen> {
                       ),
                     ),
                     onPressed: () async {
-<<<<<<< HEAD
                       final player = AudioPlayer()..setAsset(sound.assetPath);
                       player.play();
-=======
                       final player = AudioPlayer()
                         ..setAsset(sound.assetPath)
                         ..setVolume(vol);
@@ -78,7 +71,6 @@ class _SoundboardScreenState extends State<SoundboardScreen> {
                         }
                       }
                       await player.dispose();
->>>>>>> 7393f8b2422cccefa271c9cdae45722fa66b7ca5
                     },
                     child: Text(sound.name),
                   ),
