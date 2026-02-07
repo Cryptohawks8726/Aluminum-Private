@@ -16,6 +16,7 @@ const List<SoundItem> sounds = [
     assetPath: 'sounds/we-are-charlie-kirk-song.mp3',
     name: 'We Are Charlie Kirk',
   ),
+  (assetPath: 'sounds/rahh-skeletons.mp3', name: 'SKELETON RAHHHH'),
 ];
 
 class SoundboardScreen extends StatefulWidget {
