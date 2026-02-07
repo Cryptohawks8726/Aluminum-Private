@@ -12,10 +12,10 @@ const List<SoundItem> sounds = [
   (assetPath: 'sounds/outro-song_oqu8zAg.mp3', name: 'Outro Song'),
   (assetPath: 'sounds/test-sound.mp3', name: 'Test Sound'),
   (assetPath: 'sounds/vine-boom.mp3', name: 'Vine Boom'),
-  (
-    assetPath: 'sounds/we-are-charlie-kirk-song.mp3',
-    name: 'We Are Charlie Kirk',
-  ),
+  // (
+  //   assetPath: 'sounds/we-are-charlie-kirk-song.mp3',
+  //   name: 'We Are Charlie Kirk',
+  // ),
   (assetPath: 'sounds/rahh-skeletons.mp3', name: 'SKELETON RAHHHH'),
 ];
 
