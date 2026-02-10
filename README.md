@@ -1,8 +1,19 @@
 <img src="images/logo.png" style="width:30%; height:auto;"></img>
 
-# 8726 DriverDashboard
+# Aluminum
 
 Dashboard for 8726 drivers. Can communicate with the robot to send and receive info.
+
+## Features
+
+- Main dashboard screen with cameras, a view of the field, and widgets to display custom values
+- Motor test panel designed to work with MotorTesting code
+  - Set custom motor voltages for multiple different motors to test prototypes
+  - Read built in encoder position/velocity values
+  - Can also play sounds on TalonFX devices via uploading a .chrp file
+- Soundboard to tank team productivity
+- Debug panel to view and edit values for each subsystem
+  - WIP, is only slightly more convenient than glass so for now just use that.
 
 ## Repo Structure
 
@@ -32,7 +43,7 @@ place to get them is [wpilib's maven releases](https://frcmaven.wpi.edu/ui/nativ
 is a .zip file containing all the headers. Unzip all the NTCore headers into ntcore_headers/include, replacing the old files. Then,
 follow the above instructions to regenerate the bindings, and make sure there are no new errors and implement any new functionality.
 
-## Building and Running
+## Building & Running
 
 This project relies on the ntcoreffi binaries published by WPILib to interface with the ntcore library.
 These binaries can be downloaded from [wpilib's maven releases](https://frcmaven.wpi.edu/ui/native/release), however, there is also

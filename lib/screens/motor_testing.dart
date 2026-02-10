@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:aluminum/ntcore/instance.dart';
 import 'package:aluminum/ntcore/values.dart';
 import 'package:aluminum/ntreferences.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,6 +11,9 @@ const _newMotorCanIDPath = '/SmartDashboard/Add Motors/CAN ID';
 const _newMotorTypePath = '/SmartDashboard/Add Motors/Motor Type';
 const _motorTypesPath = '/SmartDashboard/Add Motors/Motor Types';
 const _publishMotorPath = '/SmartDashboard/Add Motors/publish';
+const _playMusicPath = '/SmartDashboard/Add Motors/play';
+const _stopMusicPath = '/SmartDashboard/Add Motors/stop';
+const _musicFilePath = '/SmartDashboard/Add Motors/music';
 const _usedCanIDsList = '/SmartDashboard/Add Motors/Used CAN IDs';
 const _motorsPath = '/SmartDashboard/Motors';
 
@@ -215,6 +221,44 @@ class _MotorTestingScreenState extends State<MotorTestingScreen> {
                 inst.setEntryBool(_publishMotorPath, true);
               },
               child: const Text('Add Motor'),
+            ),
+          ],
+        ),
+
+        const Divider(),
+
+        Row(
+          spacing: 12.0,
+          mainAxisAlignment: .spaceEvenly,
+          crossAxisAlignment: .center,
+          children: [
+            FilledButton(
+              onPressed: () async {
+                final res = await FilePicker.platform.pickFiles(
+                  dialogTitle: "Choose a sound file...",
+                  type: FileType.custom,
+                  allowedExtensions: <String>["png"],
+                );
+
+                if (res != null && res.files.isNotEmpty) {
+                  final file = res.files.first;
+                  final data = await File(file.path!).readAsBytes();
+                  inst.setEntryRaw(_musicFilePath, data);
+                }
+              },
+              child: const Text('Upload Music File (.chrp)'),
+            ),
+            FilledButton(
+              onPressed: () {
+                inst.setEntryBool(_playMusicPath, true);
+              },
+              child: const Text('Play Music'),
+            ),
+            FilledButton(
+              onPressed: () {
+                inst.setEntryBool(_stopMusicPath, true);
+              },
+              child: const Text('Stop Music'),
             ),
           ],
         ),

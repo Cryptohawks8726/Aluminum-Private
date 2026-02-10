@@ -7,6 +7,7 @@ import 'package:aluminum/ntcore/ntcore.g.dart';
 import 'package:aluminum/ntcore/values.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
+import 'package:win32/win32.dart';
 
 // These two enums are copied by hand, since invalid types caused ffigen enums
 // to crash in one spot.
@@ -214,6 +215,12 @@ class NTInstance {
 
   void setEntryInt(String entryName, int val) {
     ntcore.NT_SetInteger(_getEntryHandle(entryName), 0, val);
+  }
+
+  void setEntryRaw(String entryName, Uint8List val) {
+    final ptr = val.allocatePointer();
+    ntcore.NT_SetRaw(_getEntryHandle(entryName), 0, ptr, val.lengthInBytes);
+    calloc.free(ptr);
   }
 
   int _getEntryHandle(String entryName) {
