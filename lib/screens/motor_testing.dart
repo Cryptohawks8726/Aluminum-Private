@@ -237,7 +237,7 @@ class _MotorTestingScreenState extends State<MotorTestingScreen> {
                 final res = await FilePicker.platform.pickFiles(
                   dialogTitle: "Choose a sound file...",
                   type: FileType.custom,
-                  allowedExtensions: <String>["png"],
+                  allowedExtensions: <String>["chrp"],
                 );
 
                 if (res != null && res.files.isNotEmpty) {
