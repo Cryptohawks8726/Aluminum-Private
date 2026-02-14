@@ -23,9 +23,9 @@ void main(List<String> args) async {
   // File which should have the binary.
   File f;
   if (Platform.isMacOS) {
-    File f = File(Platform.script.resolve("../macos/Runner/$fileName").toFilePath());
+    f = File(Platform.script.resolve("../macos/Runner/$fileName").toFilePath());
   } else {
-    File f = File(Platform.script.resolve("../$fileName").toFilePath());
+    f = File(Platform.script.resolve("../$fileName").toFilePath());
   }
   // download for current platform if needed.
   if (!f.existsSync()) {
