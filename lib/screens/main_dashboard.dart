@@ -190,6 +190,17 @@ class _MainDashboardState extends State<MainDashboard> {
                                 displayText: 'Intake State:',
                                 color: theme.colorScheme.primaryContainer,
                               ),
+                              NumberColorChangeTile(
+                                valueName: climbSetpointPath,
+                                displayText: 'Climb Setpoint (green if up):',
+                                colorPicker: (double? v) {
+                                  if (v != null && v > 0.05) {
+                                    return Colors.green;
+                                  } else {
+                                    return Colors.redAccent;
+                                  }
+                                },
+                              ),
                             ],
                           ),
                         ),

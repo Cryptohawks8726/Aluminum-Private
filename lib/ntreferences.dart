@@ -83,3 +83,4 @@ class PIDdata {
 const String gameStatePath = '/SmartDashboard/Subsystems/Robot/gameState';
 const String intakeStatePath =
     '/SmartDashboard/Subsystems/Intake/currentCommandName';
+const String climbSetpointPath = '/SmartDashboard/Subsystems/Climb/Setpoint';
