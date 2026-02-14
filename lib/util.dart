@@ -1,7 +1,11 @@
+import 'dart:ffi' hide Size;
+
 import 'package:aluminum/ntcore/instance.dart';
 import 'package:aluminum/ntreferences.dart';
 import 'package:aluminum/settings.dart';
+import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
+import 'package:win32/win32.dart';
 
 // GENERAL //
 final List<String?> llCamUrls = Settings.getCameraURLs;
@@ -190,4 +194,30 @@ class NTTopicDisplay extends StatelessWidget {
       ],
     );
   }
+}
+
+Size getDockedWindowSize() {
+  Pointer<RECT> rect = calloc.allocate(sizeOf<RECT>());
+  // assume this succeeds
+  SystemParametersInfo(SPI_GETWORKAREA, 0, rect, 0);
+  Size size = Size(
+    rect.ref.right - rect.ref.left.toDouble(),
+    rect.ref.bottom - rect.ref.top.toDouble(),
+  );
+  // Attempts to find DS window, if it exists it will then subtract it from the size
+  const dsWindowName = 'FRC Driver Station - Version 26.0';
+  // (int is an HWND here)
+  int dsWindow = FindWindow(
+    Pointer.fromAddress(0),
+    dsWindowName.toNativeUtf16(),
+  );
+  // found window
+  if (dsWindow != 0) {
+    GetWindowRect(dsWindow, rect);
+    size = Size(size.width, size.height - (rect.ref.bottom - rect.ref.top));
+  }
+
+  print("Size: ${size.width}, ${size.height}");
+
+  return size;
 }

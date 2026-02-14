@@ -10,9 +10,11 @@ import 'package:aluminum/screens/soundboard.dart';
 import 'package:aluminum/settings.dart';
 import 'package:aluminum/util.dart';
 import 'package:aluminum/widgets/auto_chooser.dart';
+import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart' hide Size;
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:win32/win32.dart';
 import 'package:window_manager/window_manager.dart';
 
 bool appIsExpanded = false;
@@ -119,10 +121,17 @@ class _DriverDashboardState extends State<DriverDashboard> {
                       await windowManager.setTitleBarStyle(
                         TitleBarStyle.hidden,
                       );
-                      await windowManager.maximize(vertically: false);
-                      Size size = await windowManager.getSize();
-                      size = Size(size.width, 750);
+                      // maximizing for some reasons sets the position correctly, idfk windows
+                      // await windowManager.maximize(vertically: false);
+
+                      // mysterious await to get it to stop breaking
+                      // await windowManager.getSize();
+
+                      Size size = getDockedWindowSize();
+                      double scale = windowManager.getDevicePixelRatio();
+                      size = Size(size.width / scale, size.height / scale);
                       await windowManager.setSize(size);
+                      await windowManager.setPosition(Offset.zero);
                     }
                     appIsExpanded = !appIsExpanded;
                   },
