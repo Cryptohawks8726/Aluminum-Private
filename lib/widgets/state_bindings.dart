@@ -3,10 +3,31 @@ import 'package:aluminum/ntreferences.dart';
 import 'package:flutter/material.dart';
 
 const Map<String, _StateDescription> _stateDescriptions = {
-  'IdleToIntake': _StateDescription(
+  'GenericIdle': _StateDescription(
     swerveEnabled: true,
-    description: 'Driving towards lunites to intake them.',
-    bindingReminders: 'Meow Meow Meow',
+    description: 'Full control over robot to drive and intake.',
+    bindingReminders: '',
+  ),
+  'ShootState': _StateDescription(
+    swerveEnabled: true,
+    description: 'Driver control while shooting fuel.',
+    bindingReminders: '',
+  ),
+  'DebugMode': _StateDescription(
+    swerveEnabled: true,
+    description: 'Button overrides for controlling each subsystem.',
+    bindingReminders: '',
+  ),
+  'Climb Descend': _StateDescription(
+    swerveEnabled: false,
+    description: 'Automatically lowering from climb and then driving out.',
+    bindingReminders: '',
+  ),
+  'Climb Ascend': _StateDescription(
+    swerveEnabled: false,
+    description:
+        'Drive to climb pose -> slow mode, press A to confirm -> climb.',
+    bindingReminders: '',
   ),
 };
 
