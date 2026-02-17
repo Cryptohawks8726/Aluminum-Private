@@ -1,4 +1,5 @@
 import 'package:aluminum/ntcore/instance.dart';
+import 'package:aluminum/ntcore/values.dart';
 import 'package:aluminum/ntreferences.dart';
 import 'package:aluminum/util.dart';
 import "package:aluminum/widgets/pid_container.dart";
@@ -11,16 +12,17 @@ class DebugScreen extends StatefulWidget {
   State<DebugScreen> createState() => _DebugScreenState();
 }
 
-final subsystemPrefix = NTPrefixNotifier(
+final _subsystemsPath = '/SmartDashboard/Subsystems';
+final _subsystemPrefix = NTPrefixNotifier(
   instance: inst,
-  prefix: '/SmartDashboard/Subsystems',
+  prefix: _subsystemsPath,
 );
 
 class _DebugScreenState extends State<DebugScreen> {
   String selectedSubsystem = '';
 
   _DebugScreenState() {
-    subsystemPrefix.addListener(_updateState);
+    _subsystemPrefix.addListener(_updateState);
   }
 
   void _updateState() {
@@ -30,28 +32,53 @@ class _DebugScreenState extends State<DebugScreen> {
   @override
   void dispose() {
     super.dispose();
-    subsystemPrefix.removeListener(_updateState);
+    _subsystemPrefix.removeListener(_updateState);
+  }
+
+  List<(String, NetworkTablesValue)> _unpackMap(
+    String prefix,
+    Map<String, dynamic> map,
+  ) {
+    final out = <(String, NetworkTablesValue)>[];
+    for (final entry in map.entries) {
+      // filters out hidden nt properties
+      if (entry.key.startsWith('.')) {
+        continue;
+      }
+      if (entry.value is Map<String, dynamic>) {
+        out.addAll(_unpackMap('$prefix${entry.key}/', entry.value));
+      } else if (entry.value is NetworkTablesValue) {
+        out.add((prefix + entry.key, entry.value));
+      }
+    }
+    return out;
   }
 
   // moved out to clean things up
   Widget buildInnerWidget(BuildContext context) {
     final theme = Theme.of(context);
-    final subMap = subsystemPrefix.entries[selectedSubsystem];
+    final subMap = _subsystemPrefix.entries[selectedSubsystem];
 
     if (subMap == null || subMap is! Map<String, dynamic>) {
       return Center(child: Text('-- select a subsystem --'));
     } else {
       // Build constant and mutable values lists from the submap
-      final constantsList = <String>[];
-      final mutablesList = <String>[];
 
+      var mutablesList = <(String, NetworkTablesValue)>[];
+      var constantsList = <(String, NetworkTablesValue)>[];
+      var mutablesMap = subMap['MutableValues'];
+      if (mutablesMap != null && mutablesMap is Map<String, dynamic>) {
+        mutablesList = _unpackMap('', mutablesMap);
+        constantsList = _unpackMap(
+          '',
+          Map.fromEntries(
+            subMap.entries.where((entry) => entry.key != 'MutableValues'),
+          ),
+        );
+      } else {
+        constantsList = _unpackMap('', subMap);
+      }
       return Center(
-        // child: Column(
-        //   children: [
-        //     Text('Debug panel is currently under construction...'),
-        //     Text('For now, you can view and set values through glass.'),
-        //   ],
-        // ),
         child: Row(
           spacing: 12.0,
           children: [
@@ -63,6 +90,24 @@ class _DebugScreenState extends State<DebugScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 padding: EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Mutable Values',
+                      style: theme.textTheme.headlineMedium,
+                    ),
+                    const Divider(),
+                    Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (child, idx) {
+                          final entry = mutablesList[idx];
+                          return Text('${entry.$1} = ${entry.$2.toString()}');
+                        },
+                        itemCount: mutablesList.length,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Expanded(
@@ -80,6 +125,15 @@ class _DebugScreenState extends State<DebugScreen> {
                       style: theme.textTheme.headlineMedium,
                     ),
                     const Divider(),
+                    Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (child, idx) {
+                          final entry = constantsList[idx];
+                          return Text('${entry.$1} = ${entry.$2.toString()}');
+                        },
+                        itemCount: constantsList.length,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -123,7 +177,7 @@ class _DebugScreenState extends State<DebugScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (subsystemPrefix.entries.keys.isEmpty) {
+    if (_subsystemPrefix.entries.keys.isEmpty) {
       return Center(child: Text('No subsystems found.'));
     }
     return Container(
@@ -134,7 +188,7 @@ class _DebugScreenState extends State<DebugScreen> {
         children: [
           // Button for choosing a subsystem.
           SegmentedButton<String>(
-            segments: subsystemPrefix.entries.keys
+            segments: _subsystemPrefix.entries.keys
                 .map((String s) {
                   return ButtonSegment<String>(value: s, label: Text(s));
                 })
