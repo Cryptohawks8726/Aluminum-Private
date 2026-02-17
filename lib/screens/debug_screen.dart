@@ -11,36 +11,79 @@ class DebugScreen extends StatefulWidget {
   State<DebugScreen> createState() => _DebugScreenState();
 }
 
+final subsystemPrefix = NTPrefixNotifier(
+  instance: inst,
+  prefix: '/SmartDashboard/Subsystems',
+);
+
 class _DebugScreenState extends State<DebugScreen> {
-  final subsystemPrefix = NTPrefixNotifier(
-    instance: inst,
-    prefix: '/SmartDashboard/Subsystems',
-  );
   String selectedSubsystem = '';
 
   _DebugScreenState() {
-    subsystemPrefix.addListener(() {
-      setState(() {});
-    });
+    subsystemPrefix.addListener(_updateState);
+  }
+
+  void _updateState() {
+    setState(() {});
   }
 
   @override
   void dispose() {
-    subsystemPrefix.dispose();
     super.dispose();
+    subsystemPrefix.removeListener(_updateState);
   }
 
   // moved out to clean things up
   Widget buildInnerWidget(BuildContext context) {
+    final theme = Theme.of(context);
     final subMap = subsystemPrefix.entries[selectedSubsystem];
-    if (subMap == null) {
+
+    if (subMap == null || subMap is! Map<String, dynamic>) {
       return Center(child: Text('-- select a subsystem --'));
     } else {
+      // Build constant and mutable values lists from the submap
+      final constantsList = <String>[];
+      final mutablesList = <String>[];
+
       return Center(
-        child: Column(
+        // child: Column(
+        //   children: [
+        //     Text('Debug panel is currently under construction...'),
+        //     Text('For now, you can view and set values through glass.'),
+        //   ],
+        // ),
+        child: Row(
+          spacing: 12.0,
           children: [
-            Text('Debug panel is currently under construction...'),
-            Text('For now, you can view and set values through glass.'),
+            Expanded(
+              flex: 3,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: EdgeInsets.all(10.0),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Constant Values',
+                      style: theme.textTheme.headlineMedium,
+                    ),
+                    const Divider(),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       );
