@@ -289,7 +289,7 @@ class NTPrefixNotifier with ChangeNotifier {
       0,
       strippedPathPieces.length - 1,
     )) {
-      var newSubTable = entries[key];
+      var newSubTable = subTable[key];
       if (newSubTable == null) {
         newSubTable = <String, dynamic>{};
         subTable[key] = newSubTable;

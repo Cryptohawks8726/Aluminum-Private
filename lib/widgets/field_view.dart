@@ -327,7 +327,7 @@ class FieldPainter extends CustomPainter {
 
     // Draw display points
     for (int i = 0; i < displayPoints.length; i++) {
-      Offset px = _toScreen(waypoints[i], size);
+      Offset px = _toScreen(displayPoints[i], size);
       double radius = (i == draggedIndex) ? 8.0 : 6.0;
       canvas.drawCircle(px, radius, displayPointPaint);
     }
