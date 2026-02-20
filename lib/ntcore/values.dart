@@ -45,7 +45,7 @@ class NTDoubleValue extends NetworkTablesValue {
   const NTDoubleValue(super.lastChange, super.serverTime, this.value);
   @override
   String toString() {
-    return value.toString();
+    return value.toStringAsFixed(4);
   }
 
   /// returns the value of correct type

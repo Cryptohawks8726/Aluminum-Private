@@ -1,8 +1,6 @@
 import 'package:aluminum/ntcore/instance.dart';
 import 'package:aluminum/ntcore/values.dart';
 import 'package:aluminum/ntreferences.dart';
-import 'package:aluminum/util.dart';
-import "package:aluminum/widgets/pid_container.dart";
 import 'package:flutter/material.dart';
 
 class DebugScreen extends StatefulWidget {
@@ -20,6 +18,8 @@ final _subsystemPrefix = NTPrefixNotifier(
 
 class _DebugScreenState extends State<DebugScreen> {
   String selectedSubsystem = '';
+  var mutableTextControllers = <TextEditingController>[];
+  var mutableTextFocusNodes = <FocusNode>[];
 
   _DebugScreenState() {
     _subsystemPrefix.addListener(_updateState);
@@ -78,6 +78,50 @@ class _DebugScreenState extends State<DebugScreen> {
       } else {
         constantsList = _unpackMap('', subMap);
       }
+      final mutableTableRows = <TableRow>[];
+      for (int i = 0; i < mutablesList.length; i++) {
+        final e = mutablesList[i];
+        mutableTableRows.add(
+          TableRow(
+            decoration: BoxDecoration(
+              color: i % 2 == 0
+                  ? theme.colorScheme.primaryContainer
+                  : theme.colorScheme.secondaryContainer,
+            ),
+            children: [
+              Text(e.$1),
+              Text('Currently: ${e.$2}'),
+              Text('Set: '),
+              TextField(
+                selectAllOnFocus: false,
+                onSubmitted: (s) {
+                  tryParseAndSetValue(
+                    oldValue: e.$2,
+                    string: s,
+                    path:
+                        '$_subsystemsPath/$selectedSubsystem/MutableValues/${e.$1}',
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      }
+      final constTableRows = <TableRow>[];
+      for (int i = 0; i < constantsList.length; i++) {
+        final e = constantsList[i];
+        constTableRows.add(
+          TableRow(
+            decoration: BoxDecoration(
+              color: i % 2 == 0
+                  ? theme.colorScheme.primaryContainer
+                  : theme.colorScheme.secondaryContainer,
+            ),
+            children: [Text(e.$1), Text(e.$2.toString())],
+          ),
+        );
+      }
+
       return Center(
         child: Row(
           spacing: 12.0,
@@ -96,14 +140,19 @@ class _DebugScreenState extends State<DebugScreen> {
                       'Mutable Values',
                       style: theme.textTheme.headlineMedium,
                     ),
-                    const Divider(),
                     Expanded(
-                      child: ListView.builder(
-                        itemBuilder: (child, idx) {
-                          final entry = mutablesList[idx];
-                          return Text('${entry.$1} = ${entry.$2.toString()}');
-                        },
-                        itemCount: mutablesList.length,
+                      child: ListView(
+                        children: [
+                          Table(
+                            columnWidths: {
+                              0: FractionColumnWidth(0.5),
+                              1: FractionColumnWidth(0.2),
+                              2: FractionColumnWidth(0.1),
+                              3: FractionColumnWidth(0.2),
+                            },
+                            children: mutableTableRows,
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -124,14 +173,17 @@ class _DebugScreenState extends State<DebugScreen> {
                       'Constant Values',
                       style: theme.textTheme.headlineMedium,
                     ),
-                    const Divider(),
                     Expanded(
-                      child: ListView.builder(
-                        itemBuilder: (child, idx) {
-                          final entry = constantsList[idx];
-                          return Text('${entry.$1} = ${entry.$2.toString()}');
-                        },
-                        itemCount: constantsList.length,
+                      child: ListView(
+                        children: [
+                          Table(
+                            columnWidths: {
+                              0: FractionColumnWidth(0.8),
+                              1: FractionColumnWidth(0.2),
+                            },
+                            children: constTableRows,
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -141,37 +193,6 @@ class _DebugScreenState extends State<DebugScreen> {
           ],
         ),
       );
-      // return Row(
-      //   spacing: 20,
-      //   children: [
-      //     Expanded(
-      //       flex: 2,
-      //       child: Column(
-      //         spacing: 20,
-      //         children: [
-      //           Expanded(
-      //             child: PIDContainer(
-      //               subsystemName: "ExampleSubsystem",
-      //               title: "Subsystem!!!!!",
-      //             ),
-      //           ),
-      //           Expanded(
-      //             child: PIDContainer(
-      //               subsystemName: "ExampleSubsystem",
-      //               title: "Same Subsystem!!!!!",
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-
-      //     VerticalDivider(),
-      //     Expanded(flex: 1, child: NTTopicDisplay()),
-      //     VerticalDivider(),
-      //     // can be used to display more things in the future
-      //     Expanded(flex: 3, child: const Placeholder()),
-      //   ],
-      // );
     }
   }
 
@@ -206,5 +227,70 @@ class _DebugScreenState extends State<DebugScreen> {
         ],
       ),
     );
+  }
+}
+
+/// Util function to set a value appropriately.
+/// Returns true if the string was successfully parsed and the value was set.
+bool tryParseAndSetValue({
+  required NetworkTablesValue oldValue,
+  required String string,
+  required String path,
+}) {
+  switch (oldValue) {
+    case NTUnassignedValue():
+      return false;
+    case NTBooleanValue():
+      inst.setEntryBool(path, string.toLowerCase().characters.first == 't');
+      return true;
+    case NTDoubleValue():
+      final d = double.tryParse(string);
+      if (d != null) {
+        inst.setEntryDouble(path, d);
+        return true;
+      } else {
+        return false;
+      }
+    case NTStringValue():
+      inst.setEntryString(path, string);
+      return true;
+
+    case NTDoubleArrayValue():
+      var editedString = string;
+      if (string.characters.first == '[' || string.characters.first == '{') {
+        editedString = string.substring(1, string.length - 1);
+      }
+      final fragments = editedString.split(',');
+      final list = <double>[];
+      for (final f in fragments) {
+        final d = double.tryParse(f);
+        if (d == null) {
+          return false;
+        } else {
+          list.add(d);
+        }
+      }
+      inst.setEntryDoubleArray(path, list);
+      return true;
+
+    // BELOW ARE ALL UNIMPLEMENTED!!!!
+    // case NTRawValue():
+    //   // TODO: Handle this case.
+    //   throw UnimplementedError();
+    // case NTBooleanArrayValue():
+    //   // TODO: Handle this case.
+    //   throw UnimplementedError();
+
+    // case NTStringArrayValue():
+    //   // TODO: Handle this case.
+    //   throw UnimplementedError();
+    // case NTIntegerValue():
+    //   // TODO: Handle this case.
+    //   throw UnimplementedError();
+    // case NTIntegerArrayValue():
+    //   // TODO: Handle this case.
+    //   throw UnimplementedError();
+    default:
+      return false;
   }
 }

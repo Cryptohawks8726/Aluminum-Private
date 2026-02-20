@@ -283,23 +283,19 @@ class NTPrefixNotifier with ChangeNotifier {
       strippedPath = strippedPath.substring(1);
     }
     final strippedPathPieces = strippedPath.split('/');
-    print('stripped path pieces: $strippedPathPieces');
 
     Map<String, dynamic> subTable = entries;
     for (var key in strippedPathPieces.getRange(
       0,
       strippedPathPieces.length - 1,
     )) {
-      print('Searching for subtable $key');
-      var newSubTable = entries[key];
+      var newSubTable = subTable[key];
       if (newSubTable == null) {
-        print('not found, making new...');
         newSubTable = <String, dynamic>{};
         subTable[key] = newSubTable;
       }
       subTable = newSubTable;
     }
-    print('Setting new value to table with key ${strippedPathPieces.last}');
     subTable[strippedPathPieces.last] = newVal;
 
     notifyListeners();
