@@ -2,6 +2,7 @@ import 'dart:ui' show Size;
 
 import 'package:aluminum/ntcore/values.dart';
 import 'package:aluminum/ntreferences.dart';
+import 'package:aluminum/screens/gallery_screen.dart';
 import 'package:aluminum/screens/main_dashboard.dart';
 import 'package:aluminum/screens/debug_screen.dart';
 import 'package:aluminum/screens/motor_testing.dart';
@@ -73,6 +74,11 @@ final pageList = <PageDestination>[
     name: 'Settings',
     icon: Icon(Icons.settings),
     page: SettingsScreen(),
+  ),
+  PageDestination(
+    name: 'Image Gallery',
+    icon: Icon(Icons.image),
+    page: GalleryScreen(),
   ),
 ];
 
