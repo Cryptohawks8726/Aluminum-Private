@@ -33,3 +33,6 @@ Guide for making code changes to the dashboard.
 ### Adding to the soundboard
 - add the desired sound to the sounds/ directory
 - add the name and path to the sound to the list at the top of lib/screens/soundboard.dart
+### Adding to the image gallery
+- upload image/gif files into images/gallery
+- add the file name to the list in the top of widgets/image_gallery.dart
