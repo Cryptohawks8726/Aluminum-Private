@@ -47,7 +47,7 @@ class FieldViewWidget extends StatefulWidget {
 }
 
 class _FieldViewWidgetState extends State<FieldViewWidget> {
-  List<double> robotPosition = [0, 0, 0];
+  List<double> robotPosition = [0, 0, -math.pi / 2.0];
   List<Offset> customWaypoints = [];
   List<Offset> displayPoints = [];
   int? _draggedPointIndex;
@@ -79,7 +79,7 @@ class _FieldViewWidgetState extends State<FieldViewWidget> {
         robotPosition = [
           posArray.isNotEmpty ? posArray[0] : 0.0,
           posArray.isNotEmpty ? posArray[1] : 0.0,
-          posArray.length >= 2 ? posArray[2] + math.pi / 2.0 : 0.0,
+          posArray.length >= 2 ? posArray[2] - math.pi / 2.0 : -math.pi / 2.0,
         ];
       }
     });
@@ -360,14 +360,7 @@ class FieldPainter extends CustomPainter {
     canvas.translate(x, y);
     canvas.rotate(-rotation);
 
-    // 2026 SPECIFIC!
-    // canvas.drawArc(
-    //   Rect.fromCenter(center: Offset.zero, width: 70, height: 70),
-    //   -(180.0 - robotLeftTurretExtent) * math.pi / 180.0,
-    //   (robotRightTurretExtent - robotLeftTurretExtent) * math.pi / 180.0,
-    //   true,
-    //   Paint()..color = Colors.lightBlueAccent,
-    // );
+    
 
     canvas.drawRect(
       Rect.fromCenter(center: Offset.zero, width: 30, height: 30),
