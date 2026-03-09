@@ -11,8 +11,8 @@ const String fieldImagePath = "images/2026-field.png";
 
 // Same as the constants in the robot - 180 points forward.
 // In degrees.
-const double robotLeftTurretExtent = 90;
-const double robotRightTurretExtent = 270;
+const double robotLeftTurretExtent = 41;
+const double robotRightTurretExtent = 320;
 
 // Field Image & Coordinates
 const double fieldOriginX = 255, fieldOriginY = 1920;
@@ -309,6 +309,7 @@ class FieldPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.clipRect(Rect.fromLTRB(0.0, 0.0, size.width, size.height));
     // Draw path
     if (waypoints.length > 1) {
       Path path = Path();
@@ -360,7 +361,16 @@ class FieldPainter extends CustomPainter {
     canvas.translate(x, y);
     canvas.rotate(-rotation);
 
-    
+    // 2026 SPECIFIC!
+    canvas.drawArc(
+      Rect.fromCenter(center: Offset.zero, width: 250, height: 250),
+      (-90 - (180 - robotLeftTurretExtent)) * math.pi / 180.0,
+      (robotRightTurretExtent - robotLeftTurretExtent) * math.pi / 180.0,
+      true,
+      Paint()
+        ..color = Colors.lightBlueAccent.withAlpha(100)
+        ..style = PaintingStyle.fill,
+    );
 
     canvas.drawRect(
       Rect.fromCenter(center: Offset.zero, width: 30, height: 30),
