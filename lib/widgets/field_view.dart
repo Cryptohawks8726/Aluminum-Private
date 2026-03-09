@@ -9,6 +9,11 @@ const double fieldLengthMeters = 16.54;
 const double fieldWidthMeters = 8.21;
 const String fieldImagePath = "images/2026-field.png";
 
+// Same as the constants in the robot - 180 points forward.
+// In degrees.
+const double robotLeftTurretExtent = 90;
+const double robotRightTurretExtent = 270;
+
 // Field Image & Coordinates
 const double fieldOriginX = 255, fieldOriginY = 1920;
 const double fieldSizeX = 3672, fieldSizeY = 1781;
@@ -74,7 +79,7 @@ class _FieldViewWidgetState extends State<FieldViewWidget> {
         robotPosition = [
           posArray.isNotEmpty ? posArray[0] : 0.0,
           posArray.isNotEmpty ? posArray[1] : 0.0,
-          posArray.length >= 2 ? posArray[2] : 0.0,
+          posArray.length >= 2 ? posArray[2] + math.pi / 2.0 : 0.0,
         ];
       }
     });
@@ -354,6 +359,16 @@ class FieldPainter extends CustomPainter {
     canvas.save();
     canvas.translate(x, y);
     canvas.rotate(-rotation);
+
+    // 2026 SPECIFIC!
+    // canvas.drawArc(
+    //   Rect.fromCenter(center: Offset.zero, width: 70, height: 70),
+    //   -(180.0 - robotLeftTurretExtent) * math.pi / 180.0,
+    //   (robotRightTurretExtent - robotLeftTurretExtent) * math.pi / 180.0,
+    //   true,
+    //   Paint()..color = Colors.lightBlueAccent,
+    // );
+
     canvas.drawRect(
       Rect.fromCenter(center: Offset.zero, width: 30, height: 30),
       Paint()..color = Colors.green,
