@@ -6,28 +6,28 @@ const Map<String, _StateDescription> _stateDescriptions = {
   'GenericIdle': _StateDescription(
     swerveEnabled: true,
     description: 'Full control over robot to drive and intake.',
-    bindingReminders: '',
+    bindingReminders: 'DPad climb, LB intake, RB -> shoot, X -> debug',
   ),
   'ShootState': _StateDescription(
     swerveEnabled: true,
     description: 'Driver control while shooting fuel.',
-    bindingReminders: '',
+    bindingReminders: 'RT agitate, LT intake, RB -> idle',
   ),
   'DebugMode': _StateDescription(
     swerveEnabled: true,
     description: 'Button overrides for controlling each subsystem.',
-    bindingReminders: '',
+    bindingReminders: 'lock in g',
   ),
   'Climb Descend': _StateDescription(
     swerveEnabled: false,
     description: 'Automatically lowering from climb and then driving out.',
-    bindingReminders: '',
+    bindingReminders: 'B - cancel',
   ),
   'Climb Ascend': _StateDescription(
     swerveEnabled: false,
     description:
         'Drive to climb pose -> slow mode, press A to confirm -> climb.',
-    bindingReminders: '',
+    bindingReminders: 'B - cancel',
   ),
 };
 
