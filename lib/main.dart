@@ -11,11 +11,9 @@ import 'package:aluminum/screens/soundboard.dart';
 import 'package:aluminum/settings.dart';
 import 'package:aluminum/util.dart';
 import 'package:aluminum/widgets/auto_chooser.dart';
-import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart' hide Size;
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:win32/win32.dart';
 import 'package:window_manager/window_manager.dart';
 
 bool appIsExpanded = false;
