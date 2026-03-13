@@ -180,26 +180,39 @@ class _MainDashboardState extends State<MainDashboard> {
                           flex: 1,
                           child: NTValuesDisplay(
                             children: [
-                              StringDisplayTile(
-                                valueName: gameStatePath,
-                                displayText: 'Game State:',
-                                color: theme.colorScheme.secondaryContainer,
+                              BooleanDisplayTile(
+                                valueName: '/FMSInfo/IsRedAlliance',
+                                displayText: 'Are we red?',
                               ),
-                              StringDisplayTile(
-                                valueName: intakeStatePath,
-                                displayText: 'Intake State:',
-                                color: theme.colorScheme.primaryContainer,
+                              NumberDisplayTile(
+                                valueName: '/SmartDashboard/gameTime',
+                                displayText: 'Game Time (Seconds):',
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.primaryContainer,
                               ),
                               NumberColorChangeTile(
-                                valueName: climbSetpointPath,
-                                displayText: 'Climb Setpoint (green if up):',
-                                colorPicker: (double? v) {
-                                  if (v != null && v > 0.05) {
-                                    return Colors.green;
-                                  } else {
-                                    return Colors.redAccent;
+                                valueName: '/SmartDashboard/luniteCount',
+                                displayText: 'Lunite Count: ',
+                                decimalPlaces: 0,
+                                colorPicker: (double? n) {
+                                  if (n != null) {
+                                    if (n >= 3) {
+                                      return Colors.green;
+                                    } else if (n > 0) {
+                                      return Colors.yellow.shade800;
+                                    }
                                   }
+                                  return Colors.redAccent;
                                 },
+                              ),
+                              StringDisplayTile(
+                                valueName: '/SmartDashboard/currentState',
+                                displayText: 'Robot is in',
+                              ),
+                              IncrementableCounterTile(
+                                valueName: '/SmartDashboard/luniteCount',
+                                displayText: 'Lunite Count: ',
                               ),
                             ],
                           ),

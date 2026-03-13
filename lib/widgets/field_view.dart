@@ -361,17 +361,6 @@ class FieldPainter extends CustomPainter {
     canvas.translate(x, y);
     canvas.rotate(-rotation);
 
-    // 2026 SPECIFIC!
-    canvas.drawArc(
-      Rect.fromCenter(center: Offset.zero, width: 250, height: 250),
-      (-90 - (180 - robotLeftTurretExtent)) * math.pi / 180.0,
-      (robotRightTurretExtent - robotLeftTurretExtent) * math.pi / 180.0,
-      true,
-      Paint()
-        ..color = Colors.lightBlueAccent.withAlpha(100)
-        ..style = PaintingStyle.fill,
-    );
-
     canvas.drawRect(
       Rect.fromCenter(center: Offset.zero, width: 30, height: 30),
       Paint()..color = Colors.green,
