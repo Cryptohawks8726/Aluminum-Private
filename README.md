@@ -12,8 +12,8 @@ Dashboard for 8726 drivers. Can communicate with the robot to send and receive i
   - Read built in encoder position/velocity values
   - Can also play sounds on TalonFX devices via uploading a .chrp file
 - Soundboard to tank team productivity
+- Image Gallery for fun :3
 - Debug panel to view and edit values for each subsystem
-  - WIP, is only slightly more convenient than glass so for now just use that.
 
 ## Repo Structure
 
@@ -35,7 +35,8 @@ or create another class if you need to access other parts of the C library which
 for them.
 
 In order to regenerate the bindings, run tool/ffigen.dart (`dart run tool/ffigen.dart`). You may need to provide the location
-of the C standard library headers, which it for some reason can't find sometimes, so locate wherever those headers are on your
+of the C standard library headers, which it for some reason can't find sometimes (linux error, no clue if this happens on windows :P ),
+so locate wherever those headers are on your
 system and set your CPATH environment variable to that or temporarily add it to the compiler arguments in tool/ffigen.dart.
 
 You may need to update the bindings if WPILib changes or adds to the NTCore C API. To do this, download the headers (the easiest
@@ -54,7 +55,7 @@ will build and places a bundle in build/{platform}/{architecture}/{debug or rele
 containing the executable and all project assets/libraries.
 On macos, you'll need to install the [cocoapods](https://cocoapods.org/) package manager for xcode. To do this, you can use the [homebrew package manager](https://brew.sh/) (download it through github or through the terminal as shown on the website). Run `brew install cocoapods` in the terminal to install cocoapods, then run `pod setup` to complete the setup. You may need to restart your IDE and manually type `flutter run` after initially installing.
 
-Windows additionally requires enabling developer mode to allow flutter to create symlinks. Thanks, Microsoft.
+Windows additionally requires enabling developer mode to allow flutter to create symlinks. Thanks, Microslop.
 
 Other than that this is a normal flutter project and can run/hot reload/add packages as usual. Note that the dashboard will most likely be ran on windows; the linux and macos versions are mainly for development purposes.
 

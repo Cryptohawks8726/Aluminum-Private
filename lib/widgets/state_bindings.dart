@@ -11,7 +11,7 @@ const Map<String, _StateDescription> _stateDescriptions = {
   'ShootState': _StateDescription(
     swerveEnabled: true,
     description: 'Driver control while shooting fuel.',
-    bindingReminders: 'RT agitate, LT intake, RB -> idle',
+    bindingReminders: 'LT agitate, LB intake, RB -> idle',
   ),
   'DebugMode': _StateDescription(
     swerveEnabled: true,
