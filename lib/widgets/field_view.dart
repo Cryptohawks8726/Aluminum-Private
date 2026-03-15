@@ -9,11 +9,6 @@ const double fieldLengthMeters = 16.54;
 const double fieldWidthMeters = 8.21;
 const String fieldImagePath = "images/2026-field.png";
 
-// Same as the constants in the robot - 180 points forward.
-// In degrees.
-const double robotLeftTurretExtent = 41;
-const double robotRightTurretExtent = 320;
-
 // Field Image & Coordinates
 const double fieldOriginX = 255, fieldOriginY = 1920;
 const double fieldSizeX = 3672, fieldSizeY = 1781;

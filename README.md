@@ -78,3 +78,9 @@ all you need to do is change the number at the top of pubspec.yaml!
 - If the NTCore C API ever changes or gets new features, you may need to regenerate the FFI bindings.
 - You should update the version of NTCore used by the downloader script (tool/download_ntcore.dart) and delete/redownload the new binaries when a new version of WPILib releases.
 - See HACKING.md at the root of this repo for more info on making code edits.
+
+## TODO:
+- Screen record during matches
+- Support reading NT logs
+- Make logo.png a square so it doesn't look squished on windows
+- Improve performance? Seems to lag sometimes

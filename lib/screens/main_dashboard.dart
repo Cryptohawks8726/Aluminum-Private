@@ -29,7 +29,7 @@ class _MainDashboardState extends State<MainDashboard> {
         children: [
           Expanded(
             flex: 2,
-            // Container with both camera views
+            // Container with camera views
             child: Container(
               padding: EdgeInsets.fromLTRB(15.0, 10.0, 45.0, 10.0),
               decoration: BoxDecoration(
@@ -52,7 +52,7 @@ class _MainDashboardState extends State<MainDashboard> {
                             child: MjpegView(
                               fit: BoxFit.contain,
                               errorWidget: cameraErrorWidget,
-                              uri: Settings.getCameraURLs[0],
+                              uri: s,
                             ),
                           ),
                         );
